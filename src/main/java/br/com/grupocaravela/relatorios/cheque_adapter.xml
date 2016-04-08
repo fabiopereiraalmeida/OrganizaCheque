@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jdbcDataAdapter class="net.sf.jasperreports.data.jdbc.JdbcDataAdapterImpl"><name>cheque_adapter</name><driver>com.mysql.jdbc.Driver</driver><username>root</username><password>peperoni</password><savePassword>true</savePassword><url>jdbc:mysql://192.168.0.2/cheque</url><database></database><serverAddress></serverAddress><properties><key>SERVIDOR</key><value>value</value></properties></jdbcDataAdapter>

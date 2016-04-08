@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2016-03-03T22:08:22 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="HistoricoCheque" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df013db5-f76e-44d3-b0df-bcbc46d93160">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="controla_cheque_localhost"/>
+	<style name="Title" fontName="SansSerif" fontSize="50" isBold="true"/>
+	<style name="SubTitle" forecolor="#736343" fontName="SansSerif" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="SansSerif" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="SansSerif" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="ID_CHEQUE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT cheque.historico.data,
+	cheque.historico.operacao,
+	cheque.historico.obsercacao,
+	cheque.usuario.nome,
+	cheque.proprietario.nome,
+	cheque.cheque.cod_cheque,
+	cheque.cheque.cod_venda,
+	cheque.cheque.data_entrada,
+	cheque.cheque.vencimento,
+	cheque.cheque.observacao,
+	cheque.cheque.valor,
+	cheque.cheque.num_cheque
+FROM cheque.historico
+	INNER JOIN cheque.cheque ON 
+	 cheque.historico.cheque_id = cheque.cheque.id 
+	INNER JOIN cheque.proprietario ON 
+	 cheque.cheque.proprietario_id = cheque.proprietario.id 
+	INNER JOIN cheque.usuario ON 
+	 cheque.historico.usuario_id = cheque.usuario.id 
+WHERE 
+	 cheque.cheque.id LIKE $P{ID_CHEQUE}]]>
+	</queryString>
+	<field name="data" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="operacao" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="obsercacao" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nome" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="COLUMN_5" class="java.lang.String"/>
+	<field name="cod_cheque" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_venda" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="data_entrada" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vencimento" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="observacao" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="num_cheque" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<group name="Group1">
+		<groupExpression><![CDATA[$F{cod_cheque}]]></groupExpression>
+		<groupHeader>
+			<band height="124">
+				<frame>
+					<reportElement mode="Transparent" x="-21" y="7" width="843" height="104" forecolor="#FFFFFF" backcolor="#F2EBDF" uuid="ff649bda-bbd1-4c2d-bd67-21f69ad64bbf"/>
+					<textField>
+						<reportElement style="SubTitle" x="185" y="0" width="638" height="24" forecolor="#000000" uuid="b5a25815-f4ed-4382-9712-d113dc519d4e"/>
+						<textElement>
+							<font isBold="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{cod_cheque}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true">
+						<reportElement style="Detail" x="88" y="33" width="97" height="15" uuid="aa743c3d-3afa-4621-b270-b2ae1f8b4655"/>
+						<textFieldExpression><![CDATA[$F{cod_venda}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true">
+						<reportElement style="Detail" x="285" y="33" width="155" height="15" uuid="06b49228-d4b7-4a15-ae73-e23209c837ff"/>
+						<textFieldExpression><![CDATA[$F{data_entrada}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+						<reportElement style="Detail" x="286" y="61" width="104" height="15" uuid="4e6bdc14-4bbf-4c39-818b-cbf362619894"/>
+						<textFieldExpression><![CDATA[$F{vencimento}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="¤ #,##0.00;¤ -#,##0.00">
+						<reportElement style="Detail" x="520" y="33" width="110" height="15" uuid="5a8b9f7e-fb8c-4e09-9237-9b28374c0bc6"/>
+						<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true">
+						<reportElement style="Detail" x="100" y="61" width="72" height="14" uuid="786f4aea-9fd1-4c39-801b-427288d97913"/>
+						<textFieldExpression><![CDATA[$F{num_cheque}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true">
+						<reportElement style="Detail" x="88" y="85" width="662" height="14" uuid="3cf9fc7f-423d-4345-8c2d-1a49e017ab13"/>
+						<textFieldExpression><![CDATA[$F{observacao}]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement x="21" y="33" width="67" height="15" uuid="ca9d9450-305b-442a-8a05-4c12d7806802"/>
+						<text><![CDATA[Cod. Venda:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="210" y="33" width="75" height="15" uuid="868ada40-d402-4fd3-b377-b950c03ea1bc"/>
+						<text><![CDATA[Data entrada:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="211" y="61" width="75" height="15" uuid="54470c48-aa23-42e5-882c-62026f39b973"/>
+						<text><![CDATA[Vencimento:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="21" y="61" width="79" height="14" uuid="64a693ba-3bfc-4bbf-9cc8-eca98faea21f"/>
+						<text><![CDATA[Num. Cheque:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="21" y="85" width="67" height="14" uuid="fa90f5e0-289d-41a1-ac5e-12ffa32d4e65"/>
+						<text><![CDATA[Observação:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="479" y="33" width="40" height="15" uuid="802524e7-946a-414d-aacc-a47dd9abf9f7"/>
+						<text><![CDATA[Valor:]]></text>
+					</staticText>
+					<line>
+						<reportElement positionType="FixRelativeToBottom" x="21" y="104" width="802" height="1" uuid="911d2580-45c7-4a05-9d80-469c9660dc38"/>
+						<graphicElement>
+							<pen lineWidth="0.5" lineColor="#999999"/>
+						</graphicElement>
+					</line>
+					<staticText>
+						<reportElement x="21" y="0" width="159" height="24" uuid="2f59c3b2-572a-4414-9d3f-cde52bd573b2"/>
+						<textElement>
+							<font size="20" isBold="true"/>
+						</textElement>
+						<text><![CDATA[Cod. cheque:]]></text>
+					</staticText>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="3"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="282" y="0" width="239" height="40" uuid="bc1ce1da-8232-46ea-be55-cec4abb986dd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20"/>
+				</textElement>
+				<text><![CDATA[Histórico de cheque]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="802" height="1" uuid="e9d2002a-c8ee-4649-a258-640dad29110c"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="0" y="0" width="70" height="15" forecolor="#000000" uuid="85efb8e8-38b6-4f02-8fb7-028c487444af"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Data]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="70" y="0" width="146" height="15" forecolor="#000000" uuid="10a0bc06-063e-4e43-9a2d-aa21a4882284"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Usuario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="216" y="0" width="383" height="15" forecolor="#000000" uuid="c0fc5daf-3cf3-475f-a5d9-d3240dfce59c"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Operação:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="600" y="0" width="201" height="15" forecolor="#000000" uuid="c3de41c7-ceae-4b4c-87a2-1807e9681487"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Observação:]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<frame>
+				<reportElement style="Row" mode="Transparent" x="0" y="0" width="802" height="15" uuid="fa7cec56-4ec1-48e6-a26e-7266a995d174"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="0" y="0" width="72" height="15" uuid="af15777d-3e72-4d96-9679-68f8cacfa64e"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{data}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="216" y="0" width="384" height="15" uuid="ae9cba48-79b8-42a2-bf48-26a9ba0c9a9d"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{operacao}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="600" y="0" width="201" height="15" uuid="ef2ac6db-1e6c-48b4-aafd-1dbcb9e22b8f"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{obsercacao}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="70" y="0" width="146" height="15" uuid="a00359ff-c5ea-45d4-b2b2-60ace39bb9ee"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement positionType="FixRelativeToBottom" x="0" y="16" width="802" height="1" uuid="88e0e51f-b312-4c20-b797-87b2be4bd92b"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="6" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="802" height="1" uuid="fa5e88d5-a011-4e32-8f12-ce923f903111"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Transparent" x="-21" y="1" width="843" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="5d8169bd-4a75-48c8-8a68-6d3ad5ba9402"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="783" y="1" width="40" height="20" forecolor="#000000" uuid="e5e27efa-b599-499b-9ca3-848cb511cb7b"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="703" y="1" width="80" height="20" forecolor="#000000" uuid="18cfe1ca-f7d6-48b0-9827-28578b42a5e0"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy HH:mm:ss">
+					<reportElement style="Column header" x="22" y="1" width="264" height="20" forecolor="#000000" uuid="fbce24bb-3cb1-44a3-8eec-8c067ddbe5b5"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
