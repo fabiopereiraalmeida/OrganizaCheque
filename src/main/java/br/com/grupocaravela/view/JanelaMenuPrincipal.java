@@ -102,7 +102,7 @@ public class JanelaMenuPrincipal extends JFrame {
 	private JLabel lblSimNao;
 	private JDateChooser dcFinal;
 	private JDateChooser dcInicial;
-	private JCheckBox chbFiltrarPorData;
+	private JCheckBox chbFiltrarPorDataVencimento;
 
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 	private SimpleDateFormat formatData = new SimpleDateFormat("dd/MM/yyyy");
@@ -132,6 +132,8 @@ public class JanelaMenuPrincipal extends JFrame {
 
 	private TableCellRenderer renderer = new CoresJTable();
 	private TableCellRenderer rendererDate = new DateCellRenderer();
+	private JCheckBox chbDataEntr;
+	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
 
 	/**
 	 * Launch the application.
@@ -227,7 +229,7 @@ public class JanelaMenuPrincipal extends JFrame {
 					BackUp backUp = new BackUp();
 
 					if ("Linux".equals(System.getProperty("os.name"))) {
-						//JOptionPane.showMessageDialog(null, dt);
+						// JOptionPane.showMessageDialog(null, dt);
 						backUp.salvar("/opt/" + dt);
 					} else {
 						backUp.salvar("C:\\GrupoCaravela\\backup\\" + dt);
@@ -240,7 +242,6 @@ public class JanelaMenuPrincipal extends JFrame {
 				}
 
 				System.exit(0);
-
 			}
 		});
 
@@ -997,6 +998,7 @@ public class JanelaMenuPrincipal extends JFrame {
 		JPanel panel_2 = new JPanel();
 
 		JButton btnMovimentar = new JButton("Movimentar");
+		btnMovimentar.setEnabled(false);
 		btnMovimentar.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -1150,6 +1152,9 @@ public class JanelaMenuPrincipal extends JFrame {
 						JOptionPane.showMessageDialog(null,
 								"Foi movimentado um total de " + tfTotalCheques.getText() + " cheques no valor de "
 										+ tfTotal.getText() + " para o destinatario " + destinatario.getNome() + "!!!");
+						
+						table.repaint();
+						
 
 					} else {
 						JOptionPane.showMessageDialog(null, "Os cheques não foram movimentados!!!");
@@ -1161,8 +1166,8 @@ public class JanelaMenuPrincipal extends JFrame {
 		btnMovimentar.setIcon(
 				new ImageIcon(JanelaMenuPrincipal.class.getResource("/br/com/grupocaravela/icones/move_24.png")));
 
-		JButton btnExcluir = new JButton("Histórico");
-		btnExcluir.addActionListener(new ActionListener() {
+		JButton btnHistorico = new JButton("Histórico");
+		btnHistorico.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				tpObservacao.setText("");
@@ -1170,7 +1175,7 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			}
 		});
-		btnExcluir.setIcon(
+		btnHistorico.setIcon(
 				new ImageIcon(JanelaMenuPrincipal.class.getResource("/br/com/grupocaravela/icones/historico_24.png")));
 
 		JLabel lblTotalDeCheques = new JLabel("Total de ");
@@ -1246,7 +1251,7 @@ public class JanelaMenuPrincipal extends JFrame {
 								.addComponent(tfTotal, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
 								.addComponent(btnImprimir_1).addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(btnExcluir).addPreferredGap(ComponentPlacement.RELATED)
+								.addComponent(btnHistorico).addPreferredGap(ComponentPlacement.RELATED)
 								.addComponent(btnMovimentar).addContainerGap())
 				.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, 847, Short.MAX_VALUE));
 		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
@@ -1254,7 +1259,7 @@ public class JanelaMenuPrincipal extends JFrame {
 						.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
 						.addPreferredGap(ComponentPlacement.RELATED)
 						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE).addComponent(btnMovimentar)
-								.addComponent(btnExcluir).addComponent(lblTotalDeCheques)
+								.addComponent(btnHistorico).addComponent(lblTotalDeCheques)
 								.addComponent(tfTotalCheques, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
 										GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnImprimir_1, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
@@ -1319,6 +1324,13 @@ public class JanelaMenuPrincipal extends JFrame {
 
 				table.repaint();
 
+				if (listaCheque.size() > 0) {
+					btnMovimentar.setEnabled(true);
+
+				} else {
+					btnMovimentar.setEnabled(false);
+
+				}
 			}
 		});
 
@@ -1392,7 +1404,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 		JLabel lblDataInicial_1 = new JLabel("Data inicial:");
 
-		chbFiltrarPorData = new JCheckBox("Filtrar por data");
+		chbFiltrarPorDataVencimento = new JCheckBox("Data Venc.");
+		chbFiltrarPorDataVencimento.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				chbDataEntr.setSelected(false);
+			}
+		});
 
 		rdbtnCheque = new JRadioButton("Cheque");
 		rdbtnCheque.setSelected(true);
@@ -1403,58 +1420,74 @@ public class JanelaMenuPrincipal extends JFrame {
 
 		rdbtnDestinatrio = new JRadioButton("Destinatário");
 		buttonGroup.add(rdbtnDestinatrio);
+		
+		chbDataEntr = new JCheckBox("Data Entr.");
+		chbDataEntr.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				chbFiltrarPorDataVencimento.setSelected(false);
+			}
+		});
 		GroupLayout gl_panel_4 = new GroupLayout(panel_4);
-		gl_panel_4
-				.setHorizontalGroup(
-						gl_panel_4
-								.createParallelGroup(
-										Alignment.LEADING)
-								.addGroup(gl_panel_4.createSequentialGroup().addContainerGap()
-										.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
-												.addGroup(Alignment.TRAILING,
-														gl_panel_4.createSequentialGroup().addComponent(rdbtnCheque)
-																.addGap(18).addComponent(rdbtnProprietario).addGap(18)
-																.addComponent(rdbtnDestinatrio)
-																.addPreferredGap(ComponentPlacement.RELATED, 183,
-																		Short.MAX_VALUE)
-																.addComponent(lblDataInicial).addPreferredGap(
-																		ComponentPlacement.RELATED)
-								.addComponent(dcFinal, GroupLayout.PREFERRED_SIZE, 133,
-										GroupLayout.PREFERRED_SIZE)).addGroup(
-												gl_panel_4.createSequentialGroup().addComponent(chbSomenteChequeEm)
-														.addPreferredGap(ComponentPlacement.RELATED, 186,
-																Short.MAX_VALUE)
-														.addComponent(chbFiltrarPorData).addGap(18)
-														.addComponent(lblDataInicial_1)
-														.addPreferredGap(ComponentPlacement.RELATED)
-														.addComponent(dcInicial, GroupLayout.PREFERRED_SIZE, 133,
-																GroupLayout.PREFERRED_SIZE))
+		gl_panel_4.setHorizontalGroup(
+			gl_panel_4.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_4.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_panel_4.createSequentialGroup()
-								.addComponent(tfLocalizar, GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
-								.addPreferredGap(ComponentPlacement.UNRELATED).addComponent(btnBuscar)))
-				.addContainerGap()));
-		gl_panel_4.setVerticalGroup(gl_panel_4.createParallelGroup(Alignment.TRAILING).addGroup(gl_panel_4
-				.createSequentialGroup().addGap(12)
-				.addGroup(gl_panel_4.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel_4.createSequentialGroup().addComponent(chbSomenteChequeEm).addGap(27))
+							.addComponent(rdbtnCheque)
+							.addGap(18)
+							.addComponent(rdbtnProprietario)
+							.addGap(18)
+							.addComponent(rdbtnDestinatrio)
+							.addPreferredGap(ComponentPlacement.RELATED, 230, Short.MAX_VALUE)
+							.addComponent(lblDataInicial)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(dcFinal, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_panel_4.createSequentialGroup()
-								.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_panel_4.createParallelGroup(Alignment.BASELINE)
-												.addComponent(lblDataInicial_1).addComponent(chbFiltrarPorData))
-								.addComponent(dcInicial, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE))
-								.addPreferredGap(ComponentPlacement.UNRELATED)
-								.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_panel_4.createParallelGroup(Alignment.BASELINE)
-												.addComponent(lblDataInicial).addComponent(rdbtnCheque)
-												.addComponent(rdbtnProprietario).addComponent(rdbtnDestinatrio))
-										.addComponent(dcFinal, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE))))
-				.addPreferredGap(ComponentPlacement.UNRELATED)
-				.addGroup(gl_panel_4.createParallelGroup(Alignment.BASELINE)
+							.addComponent(chbSomenteChequeEm)
+							.addPreferredGap(ComponentPlacement.RELATED, 96, Short.MAX_VALUE)
+							.addComponent(chbDataEntr)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(chbFiltrarPorDataVencimento)
+							.addGap(18)
+							.addComponent(lblDataInicial_1)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(dcInicial, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel_4.createSequentialGroup()
+							.addComponent(tfLocalizar, GroupLayout.DEFAULT_SIZE, 667, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(btnBuscar)))
+					.addContainerGap())
+		);
+		gl_panel_4.setVerticalGroup(
+			gl_panel_4.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_4.createSequentialGroup()
+					.addGap(12)
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_panel_4.createSequentialGroup()
+							.addComponent(chbSomenteChequeEm)
+							.addGap(27))
+						.addGroup(gl_panel_4.createSequentialGroup()
+							.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel_4.createParallelGroup(Alignment.BASELINE)
+									.addComponent(lblDataInicial_1)
+									.addComponent(chbFiltrarPorDataVencimento)
+									.addComponent(chbDataEntr))
+								.addComponent(dcInicial, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_panel_4.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel_4.createParallelGroup(Alignment.BASELINE)
+									.addComponent(lblDataInicial)
+									.addComponent(rdbtnCheque)
+									.addComponent(rdbtnProprietario)
+									.addComponent(rdbtnDestinatrio))
+								.addComponent(dcFinal, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_panel_4.createParallelGroup(Alignment.BASELINE)
 						.addComponent(tfLocalizar, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnBuscar))
-				.addGap(35)));
+					.addGap(35))
+		);
 		panel_4.setLayout(gl_panel_4);
 		panel_2.setLayout(gl_panel_2);
 		panel.setLayout(gl_panel);
@@ -1699,7 +1732,7 @@ public class JanelaMenuPrincipal extends JFrame {
 		}
 	}
 
-	private void buscaSomenteChequeEmMãosComData(String nome, String dataInicial, String dataFinal) {
+	private void buscaSomenteChequeEmMãosComDataVencimento(String nome, String dataInicial, String dataFinal) {
 		try {
 
 			// trx.begin();
@@ -1709,7 +1742,34 @@ public class JanelaMenuPrincipal extends JFrame {
 							+ dataFinal
 							+ "' OR destinatario_id IN (SELECT id FROM Destinatario WHERE local = '1') AND codCheque LIKE '%"
 							+ nome + "%' AND vencimento BETWEEN '" + dataInicial + "' AND '" + dataFinal
-							+ "' ORDER BY dataVencimento DESC");
+							+ "' ORDER BY vencimento DESC");
+
+			List<Cheque> listaCheques = consulta.getResultList();
+			// "FROM Cheque WHERE proprietario_id IN (SELECT id FROM
+			// Proprietario WHERE nome LIKE '%" + nome + "%')"
+			// trx.commit();
+			// BETWEEN $P{DATA_INICIAL_SQL} AND $P{DATA_FINAL_SQL}
+
+			for (int i = 0; i < listaCheques.size(); i++) {
+				Cheque b = listaCheques.get(i);
+				tableModelJanelaPrincipal.addCheque(b);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
+		}
+	}
+	
+	private void buscaSomenteChequeEmMãosComDataEntrada(String nome, String dataInicial, String dataFinal) {
+		try {
+
+			// trx.begin();
+			Query consulta = manager
+					.createQuery("FROM Cheque WHERE destinatario_id IN (SELECT id FROM Destinatario WHERE local = '1') "
+							+ "AND numCheque LIKE '%" + nome + "%' AND data_entrada BETWEEN '" + dataInicial + "' AND '"
+							+ dataFinal
+							+ "' OR destinatario_id IN (SELECT id FROM Destinatario WHERE local = '1') AND codCheque LIKE '%"
+							+ nome + "%' AND data_entrada BETWEEN '" + dataInicial + "' AND '" + dataFinal
+							+ "' ORDER BY data_entrada DESC");
 
 			List<Cheque> listaCheques = consulta.getResultList();
 			// "FROM Cheque WHERE proprietario_id IN (SELECT id FROM
@@ -1726,7 +1786,7 @@ public class JanelaMenuPrincipal extends JFrame {
 		}
 	}
 
-	private void buscaChequeComDataProprietario(String nome, String dataInicial, String dataFinal) {
+	private void buscaChequeComDataProprietarioVencimento(String nome, String dataInicial, String dataFinal) {
 
 		// "from ContaReceber where cliente_id in (select id from Cliente where
 		// razao_social like '%" tfLocalizar.getText() + "%') and quitada =
@@ -1738,6 +1798,29 @@ public class JanelaMenuPrincipal extends JFrame {
 					.createQuery("FROM Cheque WHERE proprietario_id IN (SELECT id FROM Proprietario WHERE nome LIKE '%"
 							+ nome + "%') AND vencimento BETWEEN '" + dataInicial + "' AND '" + dataFinal
 							+ "' ORDER BY dataVencimento DESC");
+			List<Cheque> listaCheques = consulta.getResultList();
+
+			for (int i = 0; i < listaCheques.size(); i++) {
+				Cheque b = listaCheques.get(i);
+				tableModelJanelaPrincipal.addCheque(b);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
+		}
+	}
+	
+	private void buscaChequeComDataProprietarioDataEntrada(String nome, String dataInicial, String dataFinal) {
+
+		// "from ContaReceber where cliente_id in (select id from Cliente where
+		// razao_social like '%" tfLocalizar.getText() + "%') and quitada =
+		// '0'");
+
+		try {
+
+			Query consulta = manager
+					.createQuery("FROM Cheque WHERE proprietario_id IN (SELECT id FROM Proprietario WHERE nome LIKE '%"
+							+ nome + "%') AND data_entrada BETWEEN '" + dataInicial + "' AND '" + dataFinal
+							+ "' ORDER BY data_entrada DESC");
 			List<Cheque> listaCheques = consulta.getResultList();
 
 			for (int i = 0; i < listaCheques.size(); i++) {
@@ -1771,7 +1854,7 @@ public class JanelaMenuPrincipal extends JFrame {
 		}
 	}
 
-	private void buscaChequeComDataProprietarioEmMaos(String nome, String dataInicial, String dataFinal) {
+	private void buscaChequeComDataProprietarioEmMaosVencimento(String nome, String dataInicial, String dataFinal) {
 
 		// "from ContaReceber where cliente_id in (select id from Cliente where
 		// razao_social like '%" tfLocalizar.getText() + "%') and quitada =
@@ -1784,6 +1867,30 @@ public class JanelaMenuPrincipal extends JFrame {
 					"FROM Cheque WHERE proprietario_id IN (SELECT id FROM Proprietario WHERE nome LIKE '%" + nome
 							+ "%') AND destinatario_id IN (SELECT id FROM Destinatario WHERE local = '1') AND vencimento BETWEEN '"
 							+ dataInicial + "' AND '" + dataFinal + "' ORDER BY dataVencimento DESC");
+			List<Cheque> listaCheques = consulta.getResultList();
+
+			for (int i = 0; i < listaCheques.size(); i++) {
+				Cheque b = listaCheques.get(i);
+				tableModelJanelaPrincipal.addCheque(b);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
+		}
+	}
+	
+	private void buscaChequeComDataProprietarioEmMaosDataEntrada(String nome, String dataInicial, String dataFinal) {
+
+		// "from ContaReceber where cliente_id in (select id from Cliente where
+		// razao_social like '%" tfLocalizar.getText() + "%') and quitada =
+		// '0'");
+		// SELECT id FROM Destinatario WHERE local = '1'
+
+		try {
+
+			Query consulta = manager.createQuery(
+					"FROM Cheque WHERE proprietario_id IN (SELECT id FROM Proprietario WHERE nome LIKE '%" + nome
+							+ "%') AND destinatario_id IN (SELECT id FROM Destinatario WHERE local = '1') AND data_entrada BETWEEN '"
+							+ dataInicial + "' AND '" + dataFinal + "' ORDER BY data_entrada DESC");
 			List<Cheque> listaCheques = consulta.getResultList();
 
 			for (int i = 0; i < listaCheques.size(); i++) {
@@ -1817,7 +1924,7 @@ public class JanelaMenuPrincipal extends JFrame {
 		}
 	}
 
-	private void buscaChequeComDataDestinatarioEmMaos(String nome, String dataInicial, String dataFinal) {
+	private void buscaChequeComDataDestinatarioEmMaosVencimento(String nome, String dataInicial, String dataFinal) {
 
 		// "from ContaReceber where cliente_id in (select id from Cliente where
 		// razao_social like '%" tfLocalizar.getText() + "%') and quitada =
@@ -1841,8 +1948,33 @@ public class JanelaMenuPrincipal extends JFrame {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
 		}
 	}
+	
+	private void buscaChequeComDataDestinatarioEmMaosDataEntrada(String nome, String dataInicial, String dataFinal) {
 
-	private void buscaChequeComDataDestinatario(String nome, String dataInicial, String dataFinal) {
+		// "from ContaReceber where cliente_id in (select id from Cliente where
+		// razao_social like '%" tfLocalizar.getText() + "%') and quitada =
+		// '0'");
+		// AND destinatario_id IN (SELECT id FROM Destinatario WHERE local =
+		// '1')
+
+		try {
+
+			Query consulta = manager
+					.createQuery("FROM Cheque WHERE destinatario_id IN (SELECT id FROM Destinatario WHERE nome LIKE '%"
+							+ nome + "%' AND local = '1') AND data_entrada BETWEEN '" + dataInicial + "' AND '"
+							+ dataFinal + "' ORDER BY data_entrada DESC");
+			List<Cheque> listaCheques = consulta.getResultList();
+
+			for (int i = 0; i < listaCheques.size(); i++) {
+				Cheque b = listaCheques.get(i);
+				tableModelJanelaPrincipal.addCheque(b);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
+		}
+	}
+
+	private void buscaChequeComDataDestinatarioVencimento(String nome, String dataInicial, String dataFinal) {
 
 		// "from ContaReceber where cliente_id in (select id from Cliente where
 		// razao_social like '%" tfLocalizar.getText() + "%') and quitada =
@@ -1854,6 +1986,29 @@ public class JanelaMenuPrincipal extends JFrame {
 					.createQuery("FROM Cheque WHERE destinatario_id IN (SELECT id FROM Destinatario WHERE nome LIKE '%"
 							+ nome + "%') AND vencimento BETWEEN '" + dataInicial + "' AND '" + dataFinal
 							+ "' ORDER BY dataVencimento DESC");
+			List<Cheque> listaCheques = consulta.getResultList();
+
+			for (int i = 0; i < listaCheques.size(); i++) {
+				Cheque b = listaCheques.get(i);
+				tableModelJanelaPrincipal.addCheque(b);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
+		}
+	}
+	
+	private void buscaChequeComDataDestinatarioDataEntrada(String nome, String dataInicial, String dataFinal) {
+
+		// "from ContaReceber where cliente_id in (select id from Cliente where
+		// razao_social like '%" tfLocalizar.getText() + "%') and quitada =
+		// '0'");
+
+		try {
+
+			Query consulta = manager
+					.createQuery("FROM Cheque WHERE destinatario_id IN (SELECT id FROM Destinatario WHERE nome LIKE '%"
+							+ nome + "%') AND data_entrada BETWEEN '" + dataInicial + "' AND '" + dataFinal
+							+ "' ORDER BY data_entrada DESC");
 			List<Cheque> listaCheques = consulta.getResultList();
 
 			for (int i = 0; i < listaCheques.size(); i++) {
@@ -1927,12 +2082,30 @@ public class JanelaMenuPrincipal extends JFrame {
 		}
 	}
 
-	private void buscaTodosChequesComData(String nome, String dataInicial, String dataFinal) {
+	private void buscaTodosChequesComDataVencimento(String nome, String dataInicial, String dataFinal) {
 		try {
 			// trx.begin();
 			Query consulta = manager.createQuery("FROM Cheque WHERE vencimento BETWEEN '" + dataInicial + "' AND '"
 					+ dataFinal + "' AND numCheque LIKE '%" + nome + "%' OR vencimento BETWEEN '" + dataInicial
 					+ "' AND '" + dataFinal + "' AND codCheque LIKE '%" + nome + "%' ORDER BY dataVencimento DESC");
+			List<Cheque> listaCheques = consulta.getResultList();
+			// trx.commit();
+
+			for (int i = 0; i < listaCheques.size(); i++) {
+				Cheque b = listaCheques.get(i);
+				tableModelJanelaPrincipal.addCheque(b);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
+		}
+	}
+	
+	private void buscaTodosChequesComDataEntrada(String nome, String dataInicial, String dataFinal) {
+		try {
+			// trx.begin();
+			Query consulta = manager.createQuery("FROM Cheque WHERE vencimento BETWEEN '" + dataInicial + "' AND '"
+					+ dataFinal + "' AND numCheque LIKE '%" + nome + "%' OR data_entrada BETWEEN '" + dataInicial
+					+ "' AND '" + dataFinal + "' AND codCheque LIKE '%" + nome + "%' ORDER BY data_entrada DESC");
 			List<Cheque> listaCheques = consulta.getResultList();
 			// trx.commit();
 
@@ -1962,15 +2135,19 @@ public class JanelaMenuPrincipal extends JFrame {
 
 				if (chbSomenteChequeEm.isSelected()) {
 
-					if (chbFiltrarPorData.isSelected()) {
-						buscaSomenteChequeEmMãosComData(nome, dataInicial, dataFinal);
-					} else {
+					if (chbFiltrarPorDataVencimento.isSelected()) {
+						buscaSomenteChequeEmMãosComDataVencimento(nome, dataInicial, dataFinal);
+					} else if (chbDataEntr.isSelected()) {
+						buscaSomenteChequeEmMãosComDataEntrada(nome, dataInicial, dataFinal);
+					}else {
 						buscaSomenteChequeEmMãos(nome);
 					}
 
 				} else {
-					if (chbFiltrarPorData.isSelected()) {
-						buscaTodosChequesComData(nome, dataInicial, dataFinal);
+					if (chbFiltrarPorDataVencimento.isSelected()) {
+						buscaTodosChequesComDataVencimento(nome, dataInicial, dataFinal);
+					}else if (chbDataEntr.isSelected()) {
+						buscaTodosChequesComDataEntrada(nome, dataInicial, dataFinal);
 					} else {
 						buscaTodosCheques(nome);
 					}
@@ -2023,8 +2200,10 @@ public class JanelaMenuPrincipal extends JFrame {
 
 				if (chbSomenteChequeEm.isSelected()) {
 
-					if (chbFiltrarPorData.isSelected()) {
-						buscaChequeComDataProprietarioEmMaos(nome, dataInicial, dataFinal);
+					if (chbFiltrarPorDataVencimento.isSelected()) {
+						buscaChequeComDataProprietarioEmMaosVencimento(nome, dataInicial, dataFinal);
+					}else if (chbDataEntr.isSelected()) {
+						buscaChequeComDataProprietarioEmMaosDataEntrada(nome, dataInicial, dataFinal);
 					} else {
 						buscaChequeProprietarioEmMaos(nome);
 
@@ -2032,8 +2211,10 @@ public class JanelaMenuPrincipal extends JFrame {
 
 				} else {
 
-					if (chbFiltrarPorData.isSelected()) {
-						buscaChequeComDataProprietario(nome, dataInicial, dataFinal);
+					if (chbFiltrarPorDataVencimento.isSelected()) {
+						buscaChequeComDataProprietarioVencimento(nome, dataInicial, dataFinal);
+					}else if (chbDataEntr.isSelected()) {
+						buscaChequeComDataProprietarioDataEntrada(nome, dataInicial, dataFinal);
 					} else {
 						buscaChequeProprietario(nome);
 					}
@@ -2085,14 +2266,18 @@ public class JanelaMenuPrincipal extends JFrame {
 				limparTabela();
 
 				if (chbSomenteChequeEm.isSelected()) {
-					if (chbFiltrarPorData.isSelected()) {
-						buscaChequeComDataDestinatarioEmMaos(nome, dataInicial, dataFinal);
+					if (chbFiltrarPorDataVencimento.isSelected()) {
+						buscaChequeComDataDestinatarioEmMaosVencimento(nome, dataInicial, dataFinal);
+					}else if (chbDataEntr.isSelected()) {
+						buscaChequeComDataDestinatarioEmMaosDataEntrada(nome, dataInicial, dataFinal);
 					} else {
 						buscaChequeDestinatarioEmMaos(nome);
 					}
 				} else {
-					if (chbFiltrarPorData.isSelected()) {
-						buscaChequeComDataDestinatario(nome, dataInicial, dataFinal);
+					if (chbFiltrarPorDataVencimento.isSelected()) {
+						buscaChequeComDataDestinatarioVencimento(nome, dataInicial, dataFinal);
+					}else if (chbDataEntr.isSelected()) {
+						buscaChequeComDataDestinatarioDataEntrada(nome, dataInicial, dataFinal);
 					} else {
 						buscaChequeDestinatario(nome);
 					}
@@ -2348,7 +2533,7 @@ public class JanelaMenuPrincipal extends JFrame {
 		boolean retorno = false;
 
 		for (int j = 0; j < listaCheque.size(); j++) {
-			
+
 			if (destinatario.getLocal() == true) {
 
 				Query consulta = manager
@@ -2375,22 +2560,22 @@ public class JanelaMenuPrincipal extends JFrame {
 				}
 
 			}
-			}
-			/*
-			 * try { if (listaCheque.get(j).getVoltouDuasVezes()) { if
-			 * (destinatario.getDestinatario().equals(destinatario)) {
-			 * 
-			 * } else { JOptionPane.showMessageDialog(null,
-			 * "Não é possivel movimentar o cheque de numero " +
-			 * listaCheque.get(j).getNumCheque() + " no valor de R$ " +
-			 * listaCheque.get(j).getValor() + " para o " +
-			 * "destino selecionado. Este cheque só pode ser movido para o filho de sua origem geradora que é "
-			 * + destinatario.getDestinatario().getNome() + "!");
-			 * 
-			 * retorno = true; } } } catch (Exception e) { // TODO: handle
-			 * exception }
-			 */
-		
+		}
+		/*
+		 * try { if (listaCheque.get(j).getVoltouDuasVezes()) { if
+		 * (destinatario.getDestinatario().equals(destinatario)) {
+		 * 
+		 * } else { JOptionPane.showMessageDialog(null,
+		 * "Não é possivel movimentar o cheque de numero " +
+		 * listaCheque.get(j).getNumCheque() + " no valor de R$ " +
+		 * listaCheque.get(j).getValor() + " para o " +
+		 * "destino selecionado. Este cheque só pode ser movido para o filho de sua origem geradora que é "
+		 * + destinatario.getDestinatario().getNome() + "!");
+		 * 
+		 * retorno = true; } } } catch (Exception e) { // TODO: handle exception
+		 * }
+		 */
+
 		return retorno;
 
 	}
@@ -2466,5 +2651,4 @@ public class JanelaMenuPrincipal extends JFrame {
 		}
 
 	}
-
 }

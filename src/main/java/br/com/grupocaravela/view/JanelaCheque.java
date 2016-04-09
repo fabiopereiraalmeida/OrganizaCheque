@@ -1008,6 +1008,14 @@ public class JanelaCheque extends JFrame {
 	private void salvarCheque(Cheque c) {
 		try {
 			
+			boolean novo = true;
+			
+			if (c.getBanco().equals(null)) {
+				novo = true;
+			}else{
+				novo = false;
+			}
+			
 			//Query consulta = manager.createQuery("FROM Destinatario WHERE id LIKE '1'");
 			//List<Destinatario> listaDestinatario = consulta.getResultList();
 
@@ -1039,7 +1047,13 @@ public class JanelaCheque extends JFrame {
 
 			JOptionPane.showMessageDialog(null, "O cheque foi salvo com sucesso!");
 			
-			criarHistorico("Criação do cheque", UsuarioLogado.getUsuario(), c, destinatario);
+			
+			if (novo) {
+				criarHistorico("Criação do cheque", UsuarioLogado.getUsuario(), c, destinatario);
+			}else{
+				criarHistorico("Alteração do cheque", UsuarioLogado.getUsuario(), c, destinatario);
+			}
+			
 			
 			tabbedPane.setSelectedIndex(0);
 			limparCampos();
