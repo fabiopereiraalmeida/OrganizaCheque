@@ -293,9 +293,20 @@ public class MovimentarCheque extends JDialog {
 	}
 
 	private void importar() {
-		destinatario = tableModelDestinatario.getDestinatario(table.getSelectedRow());
-		idDestinatario = destinatario.getId();
-		dispose();
+		try {
+			
+			if (table.getSelectedRow() > 0) {
+				destinatario = tableModelDestinatario.getDestinatario(table.getSelectedRow());
+				idDestinatario = destinatario.getId();
+				dispose();
+			}else{
+				JOptionPane.showMessageDialog(null, "Favor selecionar um destinatário andes de prosseguir!");
+			}
+			
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro!!! " + e);
+		}
+		
 	}
 
 	private void limparTabela() {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2016-03-09T16:23:48 -->
+<!-- 2016-04-18T00:52:28 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ChequesSelecionados" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df221df7-2f69-42c4-8b19-61e425655d13">
 	<parameter name="VALOR_TOTAL" class="java.lang.String"/>
 	<queryString>
@@ -28,6 +28,9 @@
 		<fieldDescription><![CDATA[codVenda]]></fieldDescription>
 	</field>
 	<variable name="SOMATORIO_COLUNA" class="java.lang.Double" incrementType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor}]]></variableExpression>
+	</variable>
+	<variable name="valor1" class="java.lang.Double" resetType="Page" calculation="Sum">
 		<variableExpression><![CDATA[$F{valor}]]></variableExpression>
 	</variable>
 	<background>
@@ -150,7 +153,7 @@
 		</band>
 	</pageFooter>
 	<lastPageFooter>
-		<band height="36">
+		<band height="40">
 			<textField>
 				<reportElement x="262" y="10" width="63" height="20" uuid="3591a07e-00ed-42e9-9ed0-c6d546efea17"/>
 				<textElement verticalAlignment="Middle"/>
@@ -170,10 +173,10 @@
 				</textElement>
 				<text><![CDATA[Valor total:]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="450" y="10" width="103" height="20" uuid="91db4ce7-4a66-44ae-9baa-1be4abfe4c16"/>
+			<textField pattern="¤ #,##0.00;¤ -#,##0.00">
+				<reportElement x="452" y="10" width="101" height="20" uuid="f582b97c-34f7-4df8-b167-5c06c4db52c6"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{VALOR_TOTAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{valor1}]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>

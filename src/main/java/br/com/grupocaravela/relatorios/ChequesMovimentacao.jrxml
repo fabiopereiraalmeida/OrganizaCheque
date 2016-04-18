@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2016-03-09T16:38:03 -->
+<!-- 2016-04-18T00:50:27 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ChequesSelecionados" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df221df7-2f69-42c4-8b19-61e425655d13">
 	<parameter name="OBSERVACAO" class="java.lang.String"/>
 	<parameter name="DESTINATARIO" class="java.lang.String"/>
@@ -30,6 +30,9 @@
 		<fieldDescription><![CDATA[codVenda]]></fieldDescription>
 	</field>
 	<variable name="valor1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor}]]></variableExpression>
+	</variable>
+	<variable name="valor2" class="java.lang.Double" resetType="Page" calculation="Sum">
 		<variableExpression><![CDATA[$F{valor}]]></variableExpression>
 	</variable>
 	<background>
@@ -178,7 +181,7 @@
 		</band>
 	</pageFooter>
 	<lastPageFooter>
-		<band height="40">
+		<band height="47">
 			<staticText>
 				<reportElement x="89" y="0" width="172" height="20" uuid="5eee4086-4876-4258-9d9c-5fb4d0dbe3ed"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -198,10 +201,31 @@
 				</textElement>
 				<text><![CDATA[Valor total:]]></text>
 			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy hh:MM:ss">
+				<reportElement x="0" y="25" width="260" height="20" forecolor="#000000" uuid="2481fdba-1aee-4bce-b718-a9178409e376"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
 			<textField>
-				<reportElement x="451" y="0" width="102" height="20" uuid="4e0e2f41-524b-4526-b4c1-64b088473b27"/>
+				<reportElement x="433" y="25" width="80" height="20" forecolor="#000000" uuid="adb1665b-d8f5-47d8-9f88-681c28d1c8c1"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="513" y="25" width="40" height="20" forecolor="#000000" uuid="2105ef1f-3428-4dae-801c-3b2f5811b811"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00;¤ -#,##0.00">
+				<reportElement x="451" y="0" width="102" height="20" uuid="802ecafe-c655-4a2e-8b10-a7bec36af496"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$P{VALOR_TOTAL}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{valor2}]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>
