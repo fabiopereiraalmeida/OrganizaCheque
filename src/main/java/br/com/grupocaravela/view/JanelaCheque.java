@@ -373,7 +373,7 @@ public class JanelaCheque extends JFrame {
 
 				Object[] options = { "Sim", "Não" };
 				int i = JOptionPane.showOptionDialog(null,
-						"Gostaria de salvar o cheque com o codigo bancario nº " + tfCodAgencia.getText() + " e nome " + tfNomeBanco.getText() + "no valor de " + tfValor.getText() + "?", "Salvar",
+						"Gostaria de salvar o cheque do Banco " + tfNomeBanco.getText() + " no valor de " + tfValor.getText() + "?", "Salvar",
 						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
 				if (i == JOptionPane.YES_OPTION) {
@@ -1009,12 +1009,16 @@ public class JanelaCheque extends JFrame {
 		try {
 			
 			boolean novo = true;
-			
-			if (c.getBanco().equals(null)) {
-				novo = true;
-			}else{
-				novo = false;
+			try {
+				if (c.getBanco().equals(null)) {
+					novo = true;
+				}else{
+					novo = false;
+				}
+			} catch (Exception e) {				
+				novo = false;				
 			}
+			
 			
 			//Query consulta = manager.createQuery("FROM Destinatario WHERE id LIKE '1'");
 			//List<Destinatario> listaDestinatario = consulta.getResultList();
@@ -1023,6 +1027,11 @@ public class JanelaCheque extends JFrame {
 			destinatario = (Destinatario) cbDestinatario.getSelectedItem();
 			
 			//c.setAtivo(true);
+			
+			if (novo) {
+				c.setVoltouUmaVez(false);
+				c.setVoltouDuasVezes(false);
+			}
 			
 			c.setAgencia(agencia);
 			c.setBanco(banco);
@@ -1039,7 +1048,13 @@ public class JanelaCheque extends JFrame {
 			c.setDestinatario(destinatario);
 			
 			c.setTerceiros(cbTerceiros.isSelected());
-
+			
+			if (chbDevolvido.isSelected()) {
+				c.setVoltouUmaVez(true);
+			}else{
+				c.setVoltouUmaVez(false);
+				c.setVoltouDuasVezes(false);
+			}
 			
 			trx.begin();
 			manager.persist(c);	
