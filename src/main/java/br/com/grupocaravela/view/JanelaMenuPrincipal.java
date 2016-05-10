@@ -107,6 +107,7 @@ public class JanelaMenuPrincipal extends JFrame {
 	private JCheckBox chbFiltrarPorDataVencimento;
 
 	private SimpleDateFormat formatSql = new SimpleDateFormat("yyyy-MM-dd");
+	private SimpleDateFormat formatSqlHora = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 	private SimpleDateFormat formatData = new SimpleDateFormat("dd/MM/yyyy");
@@ -157,6 +158,7 @@ public class JanelaMenuPrincipal extends JFrame {
 	private ArrayList<Cheque> listChequeCredito = new ArrayList<>();
 	private ArrayList<Cheque> listChequeCriados = new ArrayList<>();
 	private ArrayList<Cheque> listChequeVencidos = new ArrayList<>();
+	//private ArrayList<Cheque> listChequeHistorico = new ArrayList<>();
 	private final ButtonGroup buttonGroup_2 = new ButtonGroup();
 	private JButton btnGerarRelatrioDebitados;
 	private JButton btnGerarRelatorioCriados;
@@ -168,7 +170,9 @@ public class JanelaMenuPrincipal extends JFrame {
 	private JButton btnSelecionarDebitados;
 	private JButton btnSelecionarCreditados;
 	private JButton btnSelecionarOrigem;
+	private JLabel lblEmpresa;
 
+	private Double th;
 	/**
 	 * Launch the application.
 	 */
@@ -179,9 +183,11 @@ public class JanelaMenuPrincipal extends JFrame {
 					JanelaMenuPrincipal frame = new JanelaMenuPrincipal();
 					frame.setVisible(true);
 					frame.setLocationRelativeTo(null);
+										
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+								
 			}
 		});
 		/*
@@ -200,7 +206,13 @@ public class JanelaMenuPrincipal extends JFrame {
 		carregarTableModel();
 		tamanhoColunas();
 		iniciaConexao();
-
+		
+		try {
+			lblEmpresa.setText(lerArquivoNomeEmpresa());
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		table.setAutoCreateRowSorter(true);
 		
 		JPanel panel = new JPanel();
@@ -1152,7 +1164,7 @@ public class JanelaMenuPrincipal extends JFrame {
 		});
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 956, 660);
+		setBounds(100, 100, 956, 680);
 
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setFont(new Font("Dialog", Font.BOLD, 14));
@@ -1521,23 +1533,82 @@ public class JanelaMenuPrincipal extends JFrame {
 		panel_6.setBorder(
 				new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Informa\u00E7\u00F5es do usu\u00E1rio",
 						TitledBorder.CENTER, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		
+		JPanel panel_8 = new JPanel();
+		panel_8.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Sistema info", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(51, 51, 51)));
+		
+		JLabel label_1 = new JLabel((String) null);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setIcon(new ImageIcon(JanelaMenuPrincipal.class.getResource("/br/com/grupocaravela/imagens/footer_logo.png")));
+		
+		JLabel lblLicenciadoPara = new JLabel("Licenciado para:");
+		
+		lblEmpresa = new JLabel("Empresa");
+		GroupLayout gl_panel_8 = new GroupLayout(panel_8);
+		gl_panel_8.setHorizontalGroup(
+			gl_panel_8.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_8.createSequentialGroup()
+					.addGroup(gl_panel_8.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_8.createSequentialGroup()
+							.addGap(78)
+							.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 341, GroupLayout.PREFERRED_SIZE))
+						.addGroup(Alignment.TRAILING, gl_panel_8.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(gl_panel_8.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblLicenciadoPara)
+								.addComponent(lblEmpresa))
+							.addPreferredGap(ComponentPlacement.RELATED, 186, Short.MAX_VALUE)
+							.addComponent(lblNewLabel)))
+					.addContainerGap())
+		);
+		gl_panel_8.setVerticalGroup(
+			gl_panel_8.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_8.createSequentialGroup()
+					.addComponent(label_1)
+					.addGroup(gl_panel_8.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_8.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
+							.addGap(48))
+						.addGroup(gl_panel_8.createSequentialGroup()
+							.addComponent(lblLicenciadoPara)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(lblEmpresa)
+							.addGap(57))))
+		);
+		panel_8.setLayout(gl_panel_8);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
-				.createSequentialGroup().addContainerGap()
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel_6, GroupLayout.DEFAULT_SIZE, 920, Short.MAX_VALUE)
-						.addGroup(gl_contentPane.createSequentialGroup().addComponent(tabbedPane)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)))
-				.addGap(0)));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE)
-						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap().addComponent(tabbedPane)))
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 61, GroupLayout.PREFERRED_SIZE).addGap(0)));
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 30, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 448, GroupLayout.PREFERRED_SIZE))
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addComponent(tabbedPane)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)))
+					.addGap(0))
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(tabbedPane)))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
+						.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE))
+					.addGap(0))
+		);
 
 		JLabel lblUsuario = new JLabel("Usuário:");
 
@@ -1547,19 +1618,33 @@ public class JanelaMenuPrincipal extends JFrame {
 
 		lblSimNao = new JLabel("Sim/Não");
 		GroupLayout gl_panel_6 = new GroupLayout(panel_6);
-		gl_panel_6
-				.setHorizontalGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_6.createSequentialGroup().addContainerGap().addComponent(lblUsuario)
-								.addPreferredGap(ComponentPlacement.UNRELATED)
-								.addComponent(lblNomeUsuario, GroupLayout.PREFERRED_SIZE, 341,
-										GroupLayout.PREFERRED_SIZE)
-								.addGap(18).addComponent(lblAdministrador).addPreferredGap(ComponentPlacement.UNRELATED)
-								.addComponent(lblSimNao).addContainerGap(251, Short.MAX_VALUE)));
-		gl_panel_6.setVerticalGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_6.createSequentialGroup().addContainerGap()
-						.addGroup(gl_panel_6.createParallelGroup(Alignment.BASELINE).addComponent(lblUsuario)
-								.addComponent(lblNomeUsuario).addComponent(lblAdministrador).addComponent(lblSimNao))
-				.addContainerGap(21, Short.MAX_VALUE)));
+		gl_panel_6.setHorizontalGroup(
+			gl_panel_6.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_6.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_6.createSequentialGroup()
+							.addComponent(lblUsuario)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblNomeUsuario, GroupLayout.PREFERRED_SIZE, 341, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel_6.createSequentialGroup()
+							.addComponent(lblAdministrador)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblSimNao)))
+					.addContainerGap(49, Short.MAX_VALUE))
+		);
+		gl_panel_6.setVerticalGroup(
+			gl_panel_6.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_6.createSequentialGroup()
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblUsuario)
+						.addComponent(lblNomeUsuario))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblSimNao)
+						.addComponent(lblAdministrador))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
 		panel_6.setLayout(gl_panel_6);
 
 		JButton btnNovo = new JButton("");
@@ -2295,6 +2380,9 @@ public class JanelaMenuPrincipal extends JFrame {
 				 * listaCheque.add(tableModelJanelaPrincipal.getCheque(linhaReal
 				 * )); }
 				 */
+				tabbedPane.setEnabledAt(1, false);		
+				//tabbedPane.setSelectedIndex(1);
+				
 				ArrayList<Cheque> listaCheque = new ArrayList();
 
 				for (int i = 0; i < table.getRowCount(); i++) {
@@ -2590,9 +2678,9 @@ public class JanelaMenuPrincipal extends JFrame {
 		panel_7.setBorder(
 				new TitledBorder(null, "Observa\u00E7\u00E3o", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
-		JButton btnImprimir = new JButton("");
+		JButton btnImprimir = new JButton("Impressão do histórico");
 		btnImprimir.setIcon(
-				new ImageIcon(JanelaMenuPrincipal.class.getResource("/br/com/grupocaravela/icones/impressora_64.png")));
+				new ImageIcon(JanelaMenuPrincipal.class.getResource("/br/com/grupocaravela/icones/relatorios_24.png")));
 		btnImprimir.addActionListener(new ActionListener() {
 
 			private ChamaRelatorio chamaRelatorio;
@@ -2614,26 +2702,93 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			}
 		});
+		
+		JButton btnDemaisCheques = new JButton("Demais cheques");
+		btnDemaisCheques.setIcon(new ImageIcon(JanelaMenuPrincipal.class.getResource("/br/com/grupocaravela/icones/atend_producao_24.png")));
+		btnDemaisCheques.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				// #############################################
+				final Thread tr = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							TimeUnit.SECONDS.sleep(0);
+						} catch (InterruptedException ex) {
+							Logger.getLogger(JanelaCheque.class.getName()).log(Level.SEVERE, null, ex);
+						}
+						// ######################METODO A SER
+						// EXECUTADO##############################
+						ChamaRelatorioChequesSelecionados chamaRelatorioChequesSelecionados = new ChamaRelatorioChequesSelecionados();
+						
+						try {
+
+							//demaisCheques(tableModelHistorico.getHistorico(tableHistorico.getSelectedRow()));
+							
+							chamaRelatorioChequesSelecionados.reportHistoricoMovimentacao("ChequesHostoricoMovimentado.jasper", demaisCheques(tableModelHistorico.getHistorico(tableHistorico.getSelectedRow())),
+									"R$ " + th.toString(), formatData.format(tableModelHistorico.getHistorico(tableHistorico.getSelectedRow()).getData()), tableModelHistorico.getHistorico(tableHistorico.getSelectedRow()).getDestinatario().getNome());
+
+						} catch (Exception e2) {
+							JOptionPane.showMessageDialog(null, "ERRO! Não foi possível gerar o relatório solicitado: " + e2);
+						}
+						// ######################FIM METODO A SER
+						// EXECUTADO##############################
+						
+					}
+				});
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						tr.start();
+						// .....
+						EsperaLista espera = new EsperaLista();
+						espera.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+						espera.setUndecorated(true);
+						espera.setVisible(true);
+						espera.setLocationRelativeTo(null);
+						try {
+							tr.join();
+							espera.dispose();
+
+						} catch (InterruptedException ex) {
+							// Logger.getLogger(MenuView.class.getName()).log(Level.SEVERE,
+							// null, ex);
+						}
+					}
+				}).start();
+
+				// ###############################################
+				
+			}
+		});
 
 		GroupLayout gl_panel_5 = new GroupLayout(panel_5);
-		gl_panel_5
-				.setHorizontalGroup(
-						gl_panel_5.createParallelGroup(Alignment.LEADING)
-								.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 818, Short.MAX_VALUE)
-								.addGroup(gl_panel_5.createSequentialGroup().addContainerGap()
-										.addComponent(panel_7, GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE)
-										.addPreferredGap(ComponentPlacement.RELATED).addComponent(btnImprimir,
-												GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap()));
-		gl_panel_5
-				.setVerticalGroup(gl_panel_5.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel_5.createSequentialGroup().addGap(5)
-								.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE).addGap(18)
-								.addGroup(gl_panel_5.createParallelGroup(Alignment.TRAILING)
-										.addComponent(btnImprimir, GroupLayout.PREFERRED_SIZE, 66,
-												GroupLayout.PREFERRED_SIZE)
-								.addComponent(panel_7, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE))
-				.addContainerGap()));
+		gl_panel_5.setHorizontalGroup(
+			gl_panel_5.createParallelGroup(Alignment.LEADING)
+				.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 823, Short.MAX_VALUE)
+				.addGroup(Alignment.TRAILING, gl_panel_5.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(panel_7, GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
+					.addGap(18)
+					.addGroup(gl_panel_5.createParallelGroup(Alignment.TRAILING)
+						.addComponent(btnDemaisCheques, GroupLayout.PREFERRED_SIZE, 224, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnImprimir))
+					.addContainerGap())
+		);
+		gl_panel_5.setVerticalGroup(
+			gl_panel_5.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_5.createSequentialGroup()
+					.addGap(5)
+					.addComponent(scrollPane_1, GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
+					.addGap(6)
+					.addGroup(gl_panel_5.createParallelGroup(Alignment.TRAILING)
+						.addComponent(panel_7, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_panel_5.createSequentialGroup()
+							.addComponent(btnImprimir)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnDemaisCheques, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap())
+		);
 
 		tpObservacao = new JTextPane();
 		tpObservacao.setEditable(false);
@@ -3406,6 +3561,8 @@ public class JanelaMenuPrincipal extends JFrame {
 		tfHistoricoNumeroCheque.setText(cheque.getNumCheque());
 		tfHistoricoValor.setText(cheque.getValor().toString());
 
+		
+		tabbedPane.setEnabledAt(1, true);		
 		tabbedPane.setSelectedIndex(1);
 		// carregarHistorico(tableModelJanelaPrincipal.getCheque(table.getSelectedRow()));
 		carregarHistorico(cheque);
@@ -3878,5 +4035,56 @@ public class JanelaMenuPrincipal extends JFrame {
 		}
 		
 		tfValorTotalExtratoVencidosOrigem.setText(vTotal.toString());
+	}
+	
+	private String lerArquivoNomeEmpresa() {
+
+		FileReader fileReader;
+		String sistema = System.getProperty("os.name");
+		String nome = null;
+
+		try {
+			if ("Linux".equals(sistema)) {
+				fileReader = new FileReader("/opt/GrupoCaravela/software/nome.txt");
+			} else {
+				fileReader = new FileReader("c:\\GrupoCaravela\\software\\nome.txt");
+			}
+
+			BufferedReader reader = new BufferedReader(fileReader);
+			String data = null;
+			while ((data = reader.readLine()) != null) {
+				nome = String.valueOf(data);
+			}
+			fileReader.close();
+			reader.close();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "ERRO! Erro ao ler o arquivo do nome da empresa!");
+		}
+
+		return nome;
+	}
+	
+	private ArrayList<Cheque> demaisCheques(Historico h){
+		
+		th = 0.0;
+		ArrayList<Cheque> listChequeHistorico = new ArrayList<>();
+		
+		//listChequeHistorico.clear();						
+		
+		Query consulta = manager
+				.createQuery("FROM Historico WHERE observacao like '" + h.getObservacao() + "' AND destinatario_id like '" 
+		+ h.getDestinatario().getId() + "' AND data BETWEEN '" + formatSql.format(h.getData()) + " 00:00:00' AND '" + formatSql.format(h.getData()) + " 23:59:59'");
+
+		List<Historico> listaHistorico = consulta.getResultList();
+		
+		for (int i = 0; i < listaHistorico.size(); i++) {
+			Cheque ch = listaHistorico.get(i).getCheque();
+			
+			th = th + ch.getValor();
+			
+			listChequeHistorico.add(ch);
+		}
+		
+		return listChequeHistorico;
 	}
 }

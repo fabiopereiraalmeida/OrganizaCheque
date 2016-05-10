@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2016-03-03T22:08:22 -->
+<!-- Created with Jaspersoft Studio version 6.2.1.final using JasperReports Library version 6.2.1  -->
+<!-- 2016-04-29T16:16:04 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="HistoricoCheque" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df013db5-f76e-44d3-b0df-bcbc46d93160">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="controla_cheque_localhost"/>
@@ -157,14 +157,22 @@ WHERE
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="50" splitType="Stretch">
+		<band height="86" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="282" y="0" width="239" height="40" uuid="bc1ce1da-8232-46ea-be55-cec4abb986dd"/>
+				<reportElement style="Title" x="281" y="30" width="239" height="30" uuid="bc1ce1da-8232-46ea-be55-cec4abb986dd"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="20"/>
 				</textElement>
 				<text><![CDATA[Histórico de cheque]]></text>
 			</staticText>
+			<image>
+				<reportElement x="10" y="8" width="130" height="70" uuid="cb8f9835-8f58-4763-9a10-f456a44cbb3a"/>
+				<imageExpression><![CDATA["src/main/java/br/com/grupocaravela/relatorios/logo_caravela.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="690" y="10" width="106" height="68" uuid="183c1548-9e42-407f-a270-1a46ded2a45c"/>
+				<imageExpression><![CDATA["src/main/java/br/com/grupocaravela/relatorios/Logo_organiza_cheques.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
@@ -234,7 +242,7 @@ WHERE
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="6" splitType="Stretch">
+		<band height="9" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="802" height="1" uuid="fa5e88d5-a011-4e32-8f12-ce923f903111"/>
 				<graphicElement>
@@ -244,7 +252,7 @@ WHERE
 		</band>
 	</columnFooter>
 	<pageFooter>
-		<band height="25" splitType="Stretch">
+		<band height="40" splitType="Stretch">
 			<frame>
 				<reportElement mode="Transparent" x="-21" y="1" width="843" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="5d8169bd-4a75-48c8-8a68-6d3ad5ba9402"/>
 				<textField evaluationTime="Report">
@@ -269,6 +277,11 @@ WHERE
 					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
 			</frame>
+			<staticText>
+				<reportElement x="210" y="24" width="382" height="15" uuid="c656d671-b808-4acf-a32f-d33ef3624a9b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Grupo Caravela - Desbravando Tecnologias -www.grupocaravela.com.br]]></text>
+			</staticText>
 		</band>
 	</pageFooter>
 	<summary>

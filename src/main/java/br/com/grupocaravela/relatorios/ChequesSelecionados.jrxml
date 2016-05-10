@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
-<!-- 2016-04-22T02:59:03 -->
+<!-- Created with Jaspersoft Studio version 6.2.1.final using JasperReports Library version 6.2.1  -->
+<!-- 2016-04-29T16:21:36 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ChequesSelecionados" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df221df7-2f69-42c4-8b19-61e425655d13">
 	<parameter name="VALOR_TOTAL" class="java.lang.String"/>
 	<queryString>
@@ -37,14 +37,22 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="58" splitType="Stretch">
+		<band height="85" splitType="Stretch">
 			<staticText>
-				<reportElement x="160" y="10" width="239" height="40" uuid="922f5689-4bb0-4987-972d-868317b4135d"/>
+				<reportElement x="160" y="21" width="239" height="40" uuid="922f5689-4bb0-4987-972d-868317b4135d"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="20" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Lista de Cheques]]></text>
 			</staticText>
+			<image>
+				<reportElement x="10" y="8" width="130" height="70" uuid="a690e662-d821-4b28-8d1e-0abc7baf38e5"/>
+				<imageExpression><![CDATA["src/main/java/br/com/grupocaravela/relatorios/logo_caravela.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="440" y="9" width="106" height="68" uuid="53d536a1-5b10-4205-9fcc-44b2b32fecf1"/>
+				<imageExpression><![CDATA["src/main/java/br/com/grupocaravela/relatorios/Logo_organiza_cheques.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
@@ -128,7 +136,7 @@
 		<band height="11" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="25" splitType="Stretch">
+		<band height="47" splitType="Stretch">
 			<textField pattern="EEEEE dd MMMMM yyyy HH:mm:ss">
 				<reportElement x="0" y="1" width="271" height="20" forecolor="#000000" uuid="b3229d31-a3ca-4645-a401-34586d9e17f9"/>
 				<textElement verticalAlignment="Middle">
@@ -150,10 +158,15 @@
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="90" y="26" width="382" height="15" uuid="dd15b7b6-f233-4476-b219-c7fabbfcea54"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Grupo Caravela - Desbravando Tecnologias -www.grupocaravela.com.br]]></text>
+			</staticText>
 		</band>
 	</pageFooter>
 	<lastPageFooter>
-		<band height="55">
+		<band height="71">
 			<textField>
 				<reportElement x="262" y="6" width="63" height="20" uuid="3591a07e-00ed-42e9-9ed0-c6d546efea17"/>
 				<textElement verticalAlignment="Middle"/>
@@ -199,6 +212,11 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{VALOR_TOTAL}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="89" y="56" width="382" height="15" uuid="7b11cd0c-337e-4513-9477-ee10b86ba6b9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Grupo Caravela - Desbravando Tecnologias -www.grupocaravela.com.br]]></text>
+			</staticText>
 		</band>
 	</lastPageFooter>
 </jasperReport>

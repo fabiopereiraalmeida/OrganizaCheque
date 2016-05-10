@@ -58,4 +58,38 @@ public class ChamaRelatorioChequesSelecionados {
 
 	    }
 	
+	    public void reportHistoricoMovimentacao(String endereco, ArrayList<Cheque> listaCheque, String valorTotal, String data, String destinatario) throws JRException {
+	    	
+	        JasperReport jasper;
+
+	        Map map = new HashMap<>();
+	        
+	        URL arquivo = getClass().getResource(endereco);
+	        jasper = (JasperReport) JRLoader.loadObject(arquivo);
+	        
+	        map.put("VALOR_TOTAL", valorTotal);
+	        map.put("DATA", data);
+	        map.put("DESTINATARIO", destinatario);
+	        
+	        /*
+	        // criando os dados que serão passados ao datasource
+	        List dados = new ArrayList();	 
+	        
+	        for (int j = 0; j < listaCheque.size(); j++) {
+	        	
+	        	Cheque c = listaCheque.get(j);
+	        	
+	        	dados.add(j);
+	        }	        
+	        */
+	        JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(listaCheque);
+	       	        
+	        JasperPrint jasperPrint = JasperFillManager.fillReport(jasper, map, ds);
+	        	            
+	        //JasperPrint jasperPrint = JasperFillManager.fillReport(jasper, map, ds);
+
+	        JasperViewer jv = new JasperViewer(jasperPrint, false);
+	        jv.setVisible(true);
+
+	    }
 }

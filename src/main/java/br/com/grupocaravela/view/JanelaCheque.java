@@ -27,6 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -85,6 +86,10 @@ import br.com.grupocaravela.render.MoedaRender;
 import br.com.grupocaravela.render.TableRenderer;
 import br.com.grupocaravela.tablemodel.TableModelCheque;
 import javax.swing.JCheckBox;
+import java.awt.event.InputMethodListener;
+import java.awt.event.InputMethodEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class JanelaCheque extends JFrame {
 
@@ -127,6 +132,10 @@ public class JanelaCheque extends JFrame {
 	private JButton btnExcluir;
 	private JCheckBox cbTerceiros;
 	private JCheckBox chbDevolvido;
+	private JTextField tfNumeroDias;
+	private JTextField tfJuros;
+	private JTextField tfValorPago;
+	private JTextField tfLucro;
 	/**
 	 * Launch the application.
 	 */
@@ -161,12 +170,15 @@ public class JanelaCheque extends JFrame {
 			chbDevolvido.setEnabled(true);
 		}
 		
+		tfLucro.setDisabledTextColor(Color.black);
+		tfValorPago.setDisabledTextColor(Color.black);
+		
 	}
 
 	private void carregarJanela() {
 		setTitle("Cheques");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 814, 514);
+		setBounds(100, 100, 814, 613);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -477,26 +489,30 @@ public class JanelaCheque extends JFrame {
 		
 		chbDevolvido = new JCheckBox("Devolvido");
 		chbDevolvido.setEnabled(false);
+		
+		JPanel panel_16 = new JPanel();
+		panel_16.setBorder(new TitledBorder(null, "Informa\u00E7\u00F5es de troca", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GroupLayout gl_panel_6 = new GroupLayout(panel_6);
 		gl_panel_6.setHorizontalGroup(
-			gl_panel_6.createParallelGroup(Alignment.LEADING)
+			gl_panel_6.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel_6.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
-						.addComponent(tfCodBarrasCheque, GroupLayout.DEFAULT_SIZE, 774, Short.MAX_VALUE)
-						.addComponent(panel_12, GroupLayout.PREFERRED_SIZE, 774, Short.MAX_VALUE)
-						.addComponent(lblCod)
-						.addGroup(gl_panel_6.createSequentialGroup()
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.TRAILING)
+						.addComponent(panel_16, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 774, Short.MAX_VALUE)
+						.addComponent(panel_12, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 774, Short.MAX_VALUE)
+						.addComponent(tfCodBarrasCheque, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 774, Short.MAX_VALUE)
+						.addComponent(lblCod, Alignment.LEADING)
+						.addGroup(Alignment.LEADING, gl_panel_6.createSequentialGroup()
 							.addComponent(panel_10, GroupLayout.PREFERRED_SIZE, 269, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(panel_11, GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE))
-						.addGroup(gl_panel_6.createSequentialGroup()
+						.addGroup(Alignment.LEADING, gl_panel_6.createSequentialGroup()
 							.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblDestinatrio)
 								.addComponent(cbDestinatario, 0, 258, Short.MAX_VALUE))
 							.addGap(423)
 							.addComponent(chbDevolvido))
-						.addGroup(gl_panel_6.createSequentialGroup()
+						.addGroup(Alignment.LEADING, gl_panel_6.createSequentialGroup()
 							.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(panel_9, GroupLayout.PREFERRED_SIZE, 225, GroupLayout.PREFERRED_SIZE)))
@@ -525,9 +541,91 @@ public class JanelaCheque extends JFrame {
 						.addComponent(panel_11, 0, 0, Short.MAX_VALUE)
 						.addComponent(panel_10, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(panel_12, GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
-					.addContainerGap())
+					.addComponent(panel_12, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(panel_16, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(67, Short.MAX_VALUE))
 		);
+		
+		JLabel label_1 = new JLabel("Nº Dias:");
+		
+		tfNumeroDias = new JTextField();
+		tfNumeroDias.setEditable(false);
+		
+		tfNumeroDias.setColumns(10);
+		
+		JLabel label_2 = new JLabel("Juros:");
+		
+		tfJuros = new DecimalFormattedField(DecimalFormattedField.PORCENTAGEM);
+		tfJuros.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				calcularJuros();
+			}
+		});
+		tfJuros.setColumns(10);
+		
+		JLabel lblValorASer = new JLabel("Valor a ser pago:");
+		
+		tfValorPago = new DecimalFormattedField(DecimalFormattedField.REAL);
+		tfValorPago.setEnabled(false);
+		tfValorPago.setEditable(false);
+		tfValorPago.setColumns(10);
+		
+		JLabel lblLucro = new JLabel("Lucro:");
+		
+		tfLucro = new DecimalFormattedField(DecimalFormattedField.REAL);
+		tfLucro.setEditable(false);
+		tfLucro.setForeground(Color.BLACK);
+		tfLucro.setEnabled(false);
+		tfLucro.setColumns(10);
+		GroupLayout gl_panel_16 = new GroupLayout(panel_16);
+		gl_panel_16.setHorizontalGroup(
+			gl_panel_16.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_16.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_16.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_16.createSequentialGroup()
+							.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 57, GroupLayout.PREFERRED_SIZE)
+							.addGap(12)
+							.addComponent(tfNumeroDias, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
+							.addComponent(label_2, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE)
+							.addGap(12)
+							.addComponent(tfJuros, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(lblLucro)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(tfLucro, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel_16.createSequentialGroup()
+							.addComponent(lblValorASer)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(tfValorPago, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(183, Short.MAX_VALUE))
+		);
+		gl_panel_16.setVerticalGroup(
+			gl_panel_16.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_16.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_16.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_16.createSequentialGroup()
+							.addGap(2)
+							.addComponent(label_1))
+						.addComponent(tfNumeroDias, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_panel_16.createSequentialGroup()
+							.addGap(2)
+							.addComponent(label_2))
+						.addGroup(gl_panel_16.createParallelGroup(Alignment.BASELINE)
+							.addComponent(tfJuros, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblLucro)
+							.addComponent(tfLucro, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_panel_16.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblValorASer)
+						.addComponent(tfValorPago, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(65, Short.MAX_VALUE))
+		);
+		panel_16.setLayout(gl_panel_16);
 
 		JLabel lblValor = new JLabel("Valor:");
 
@@ -542,10 +640,66 @@ public class JanelaCheque extends JFrame {
 		JLabel lblDataEntrada = new JLabel("Data Entrada:");
 
 		dcEntradaData = new JDateChooser();
+		dcEntradaData.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				calcularJuros();
+				
+				/*
+				try {
+					tfNumeroDias.setText(String.valueOf(calcularDias()));
+				} catch (Exception e2) {
+					tfNumeroDias.setText("0");
+				}
+				*/
+			}
+		});
+		dcEntradaData.getCalendarButton().addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				
+			}
+		});
+		dcEntradaData.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				
+			}
+		});
 
 		JLabel lblBomParaDia = new JLabel("Bom para data:");
 
 		dcBomData = new JDateChooser();
+		dcBomData.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				
+				calcularJuros();
+				
+				/*
+				try {
+					tfNumeroDias.setText(String.valueOf(calcularDias()));
+				} catch (Exception e2) {
+					tfNumeroDias.setText("0");
+				}
+				*/
+			}
+		});
+		dcBomData.addInputMethodListener(new InputMethodListener() {
+			public void caretPositionChanged(InputMethodEvent event) {
+			}
+			public void inputMethodTextChanged(InputMethodEvent event) {
+				
+			}
+		});
+		dcBomData.getCalendarButton().addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {				
+			}
+		});
+		dcBomData.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {								
+			}
+		});
 		
 		JLabel lblCodVenda = new JLabel("Cod. Venda:");
 		
@@ -571,35 +725,34 @@ public class JanelaCheque extends JFrame {
 					.addContainerGap()
 					.addGroup(gl_panel_12.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel_12.createSequentialGroup()
+							.addComponent(lblNumCheque)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(tfNumCheque, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblValor)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(tfValor, GroupLayout.PREFERRED_SIZE, 159, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(lblCodVenda)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(tfCodVenda, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addGap(69))
+						.addGroup(gl_panel_12.createSequentialGroup()
+							.addComponent(lblDataEntrada)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(dcEntradaData, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblBomParaDia)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(dcBomData, GroupLayout.PREFERRED_SIZE, 151, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(cbTerceiros)
+							.addContainerGap(85, Short.MAX_VALUE))
+						.addGroup(gl_panel_12.createSequentialGroup()
 							.addComponent(lblObs)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(tfObs, GroupLayout.DEFAULT_SIZE, 707, Short.MAX_VALUE))
-						.addGroup(gl_panel_12.createSequentialGroup()
-							.addGroup(gl_panel_12.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel_12.createSequentialGroup()
-									.addComponent(lblNumCheque)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(tfNumCheque, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(lblValor)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(tfValor, GroupLayout.PREFERRED_SIZE, 159, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(lblCodVenda))
-								.addGroup(gl_panel_12.createSequentialGroup()
-									.addComponent(lblDataEntrada)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(dcEntradaData, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(lblBomParaDia)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(dcBomData, GroupLayout.PREFERRED_SIZE, 151, GroupLayout.PREFERRED_SIZE)))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panel_12.createParallelGroup(Alignment.LEADING)
-								.addComponent(cbTerceiros)
-								.addComponent(tfCodVenda, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(57)))
-					.addGap(12))
+							.addComponent(tfObs, GroupLayout.DEFAULT_SIZE, 717, Short.MAX_VALUE)
+							.addContainerGap())))
 		);
 		gl_panel_12.setVerticalGroup(
 			gl_panel_12.createParallelGroup(Alignment.LEADING)
@@ -611,18 +764,18 @@ public class JanelaCheque extends JFrame {
 						.addComponent(tfNumCheque, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblCodVenda)
 						.addComponent(tfCodVenda, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_panel_12.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblDataEntrada)
-						.addComponent(dcEntradaData, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblBomParaDia)
 						.addComponent(dcBomData, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(cbTerceiros))
-					.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(cbTerceiros)
+						.addComponent(lblDataEntrada)
+						.addComponent(dcEntradaData, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_panel_12.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblObs)
 						.addComponent(tfObs, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(18, Short.MAX_VALUE))
+					.addContainerGap(88, Short.MAX_VALUE))
 		);
 		panel_12.setLayout(gl_panel_12);
 
@@ -934,6 +1087,7 @@ public class JanelaCheque extends JFrame {
 		destinatario = cheque.getDestinatario();		
 		
 		carregarCampos(cheque);
+		tfNumeroDias.setText(String.valueOf(calcularDias()));
 		buscarImagemServidor();
 		tabbedPane.setSelectedIndex(1);
 	}
@@ -973,6 +1127,27 @@ public class JanelaCheque extends JFrame {
 			// TODO: handle exception
 		}
 		
+		//Juros
+		
+		//tfNumeroDias.setText(c.getDias().toString());
+		try {
+			tfJuros.setText(c.getJuros().toString());
+		} catch (Exception e) {
+			tfJuros.setText("0");
+		}
+		
+		try {
+			tfLucro.setText(c.getLucro().toString());
+		} catch (Exception e) {
+			tfLucro.setText("0");
+		}
+		
+		try {
+			tfValorPago.setText(c.getValorPago().toString());
+		} catch (Exception e) {
+			tfValorPago.setText("0");
+		}
+				
 	}
 
 	private void limparCampos() {
@@ -986,6 +1161,7 @@ public class JanelaCheque extends JFrame {
 		tfValor.setText("0.0");
 		tfCodVenda.setText("");
 		tfObs.setText("");
+		tfNumeroDias.setText("0");
 		
 		//cbDestinatario.setSelectedIndex(0);
 
@@ -1055,6 +1231,12 @@ public class JanelaCheque extends JFrame {
 				c.setVoltouUmaVez(false);
 				c.setVoltouDuasVezes(false);
 			}
+			
+			//Lucro
+			//c.setDias(Double.parseDouble(tfNumeroDias.getText()));
+			c.setLucro(Double.parseDouble(tfLucro.getText().replace("R$ ", "").replace(".", "").replace(",", ".")));
+			c.setJuros(Double.parseDouble(tfJuros.getText().replace(".", "").replace(",", ".").replace("%", "")));
+			c.setValorPago(Double.parseDouble(tfValorPago.getText().replace("R$ ", "").replace(".", "").replace(",", ".")));
 			
 			trx.begin();
 			manager.persist(c);	
@@ -1767,5 +1949,54 @@ public void criarHistorico(String opearacao, Usuario u, Cheque c, Destinatario d
 		
 		return retorno;
 		
+	}
+	
+	private void calcularJuros(){
+		
+		Double juros = 0.0;
+		try {
+			juros = Double.parseDouble(tfJuros.getText().replace(".", "").replace(",", ".").replace("%", ""));
+		} catch (Exception e) {
+			juros = 0.0;
+		}
+				
+		int dias = calcularDias();
+		tfNumeroDias.setText(String.valueOf(dias));
+				
+		Double valorCheque = 0.0;
+		
+		try {
+			valorCheque = Double.parseDouble(tfValor.getText().replace("R$ ", "").replace(".", "").replace(",", "."));
+		} catch (Exception e) {
+			valorCheque = 0.0;
+		}
+		
+		Double jurosDesconto = (juros/30)*dias;
+		
+		Double lucro = (valorCheque/100) * jurosDesconto;
+		
+		Double valorPago = valorCheque - lucro;
+		
+		tfLucro.setText(lucro.toString());
+		tfValorPago.setText(valorPago.toString());
+		
+	}
+	
+	private int calcularDias(){
+		try {
+			GregorianCalendar ini = new GregorianCalendar();
+			 GregorianCalendar fim = new GregorianCalendar();  
+			 
+			 ini.setTime(dcEntradaData.getDate());
+			 fim.setTime(dcBomData.getDate());
+			 
+			 long dt1 = ini.getTimeInMillis();
+			 long dt2 = fim.getTimeInMillis(); 
+			 
+			 return (int) (((dt2 - dt1) / 86400000)+1);
+		} catch (Exception e) {
+			return 0;
+		}
+		 
 	}
 }

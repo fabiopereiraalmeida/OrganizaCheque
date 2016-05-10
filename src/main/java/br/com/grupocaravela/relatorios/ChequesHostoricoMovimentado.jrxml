@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.1.final using JasperReports Library version 6.2.1  -->
-<!-- 2016-04-29T16:20:13 -->
+<!-- 2016-05-05T17:37:27 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ChequesSelecionados" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df221df7-2f69-42c4-8b19-61e425655d13">
-	<parameter name="OBSERVACAO" class="java.lang.String"/>
-	<parameter name="DESTINATARIO" class="java.lang.String"/>
 	<parameter name="VALOR_TOTAL" class="java.lang.String"/>
+	<parameter name="DESTINATARIO" class="java.lang.String"/>
+	<parameter name="DATA" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -29,46 +29,60 @@
 	<field name="codVenda" class="java.lang.String">
 		<fieldDescription><![CDATA[codVenda]]></fieldDescription>
 	</field>
-	<variable name="valor1" class="java.lang.Double" resetType="Column" calculation="Sum">
+	<variable name="SOMATORIO_COLUNA" class="java.lang.Double" incrementType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{valor}]]></variableExpression>
 	</variable>
-	<variable name="valor2" class="java.lang.Double" resetType="Page" calculation="Sum">
+	<variable name="valor1" class="java.lang.Double" incrementType="Page" calculation="Sum">
 		<variableExpression><![CDATA[$F{valor}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="101" splitType="Stretch">
+		<band height="132" splitType="Stretch">
 			<staticText>
-				<reportElement x="6" y="66" width="284" height="30" uuid="922f5689-4bb0-4987-972d-868317b4135d"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Movimentação para o destinatário:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="290" y="66" width="259" height="30" uuid="03b42ae6-a0e8-4d4f-8d7e-801ca086c689"/>
-				<textElement verticalAlignment="Middle">
-					<font size="14" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{DESTINATARIO}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="165" y="39" width="226" height="26" uuid="c6e0e586-2d7d-416d-b9a7-99916f6292b4"/>
+				<reportElement x="162" y="20" width="239" height="40" uuid="922f5689-4bb0-4987-972d-868317b4135d"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="18" isBold="true"/>
+					<font size="20" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Movimentação]]></text>
+				<text><![CDATA[Lista de Cheques]]></text>
 			</staticText>
 			<image>
-				<reportElement x="8" y="5" width="110" height="58" uuid="84d42e2a-9c6f-4855-9d44-069f98b4df5a"/>
+				<reportElement x="10" y="8" width="130" height="70" uuid="a690e662-d821-4b28-8d1e-0abc7baf38e5"/>
 				<imageExpression><![CDATA["src/main/java/br/com/grupocaravela/relatorios/logo_caravela.png"]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="452" y="5" width="97" height="57" uuid="62a2f3b0-8803-4d8a-ab8a-5d312c58b66d"/>
+				<reportElement x="440" y="9" width="106" height="68" uuid="53d536a1-5b10-4205-9fcc-44b2b32fecf1"/>
 				<imageExpression><![CDATA["src/main/java/br/com/grupocaravela/relatorios/Logo_organiza_cheques.png"]]></imageExpression>
 			</image>
+			<staticText>
+				<reportElement x="5" y="110" width="170" height="18" uuid="113fa992-8c6a-4661-a8f4-e5ece45cd434"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Data da movimentação:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="185" y="110" width="113" height="18" uuid="3cbeb81d-082d-437b-aa1e-ac01e625f394"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{DATA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="88" width="205" height="18" uuid="746c3776-10a8-45db-a133-3e340d78669c"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Movido para o destinatário:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="210" y="88" width="334" height="18" uuid="64b58b21-5192-467d-be93-97256fe8d99c"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{DESTINATARIO}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -149,24 +163,12 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="44" splitType="Stretch">
-			<textField>
-				<reportElement x="90" y="10" width="462" height="30" uuid="5bb3acab-ec61-434f-9bc8-16abbbcb1e3b"/>
-				<textFieldExpression><![CDATA[$P{OBSERVACAO}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="0" y="10" width="90" height="20" uuid="549de07e-1398-4e24-8efc-57bf656cdf08"/>
-				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Observação:]]></text>
-			</staticText>
-		</band>
+		<band height="11" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band height="47" splitType="Stretch">
-			<textField pattern="EEEEE dd MMMMM yyyy hh:MM:ss">
-				<reportElement x="0" y="1" width="260" height="20" forecolor="#000000" uuid="b3229d31-a3ca-4645-a401-34586d9e17f9"/>
+			<textField pattern="EEEEE dd MMMMM yyyy HH:mm:ss">
+				<reportElement x="0" y="1" width="271" height="20" forecolor="#000000" uuid="b3229d31-a3ca-4645-a401-34586d9e17f9"/>
 				<textElement verticalAlignment="Middle">
 					<font size="10" isBold="false"/>
 				</textElement>
@@ -187,7 +189,7 @@
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="89" y="25" width="382" height="15" uuid="ff0c7ac2-9d97-4c46-99a9-247f32c04a98"/>
+				<reportElement x="90" y="26" width="382" height="15" uuid="dd15b7b6-f233-4476-b219-c7fabbfcea54"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Grupo Caravela - Desbravando Tecnologias -www.grupocaravela.com.br]]></text>
 			</staticText>
@@ -195,53 +197,53 @@
 	</pageFooter>
 	<lastPageFooter>
 		<band height="71">
+			<textField>
+				<reportElement x="262" y="6" width="63" height="20" uuid="3591a07e-00ed-42e9-9ed0-c6d546efea17"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="89" y="0" width="172" height="20" uuid="5eee4086-4876-4258-9d9c-5fb4d0dbe3ed"/>
+				<reportElement x="90" y="6" width="172" height="20" uuid="5eee4086-4876-4258-9d9c-5fb4d0dbe3ed"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total de cheques da lista:]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="261" y="0" width="63" height="20" uuid="3591a07e-00ed-42e9-9ed0-c6d546efea17"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="369" y="0" width="82" height="20" uuid="c4667af6-87db-410f-982d-6efcecedbe51"/>
+				<reportElement x="370" y="6" width="82" height="20" uuid="c4667af6-87db-410f-982d-6efcecedbe51"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Valor total:]]></text>
 			</staticText>
-			<textField pattern="EEEEE dd MMMMM yyyy hh:MM:ss">
-				<reportElement x="0" y="25" width="260" height="20" forecolor="#000000" uuid="2481fdba-1aee-4bce-b718-a9178409e376"/>
+			<textField pattern="EEEEE dd MMMMM yyyy HH:mm:ss">
+				<reportElement x="0" y="31" width="271" height="20" forecolor="#000000" uuid="566b8359-30c1-4048-9148-565ceb0d1aee"/>
 				<textElement verticalAlignment="Middle">
 					<font size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="433" y="25" width="80" height="20" forecolor="#000000" uuid="adb1665b-d8f5-47d8-9f88-681c28d1c8c1"/>
+				<reportElement x="433" y="31" width="80" height="20" forecolor="#000000" uuid="04336fe0-b7a4-4014-9744-dab5cb3c1b18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="513" y="25" width="40" height="20" forecolor="#000000" uuid="2105ef1f-3428-4dae-801c-3b2f5811b811"/>
+				<reportElement x="513" y="31" width="40" height="20" forecolor="#000000" uuid="08ea66cb-6738-4386-973d-381c2ca73851"/>
 				<textElement verticalAlignment="Middle">
 					<font size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
-			<textField pattern="¤ #,##0.00;¤ -#,##0.00">
-				<reportElement x="451" y="0" width="102" height="20" uuid="802ecafe-c655-4a2e-8b10-a7bec36af496"/>
+			<textField>
+				<reportElement x="452" y="6" width="101" height="20" uuid="08d2cf66-029e-438c-a561-33a24aba534d"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$V{valor2}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{VALOR_TOTAL}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="89" y="50" width="382" height="15" uuid="7bc6bf04-10db-495b-98dd-dd21656c5f28"/>
+				<reportElement x="89" y="56" width="382" height="15" uuid="7b11cd0c-337e-4513-9477-ee10b86ba6b9"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Grupo Caravela - Desbravando Tecnologias -www.grupocaravela.com.br]]></text>
 			</staticText>

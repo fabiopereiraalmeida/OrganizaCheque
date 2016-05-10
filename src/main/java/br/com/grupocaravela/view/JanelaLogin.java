@@ -27,7 +27,6 @@ import br.com.grupocaravela.aguarde.BootSplash;
 import br.com.grupocaravela.configuracao.Empresa;
 import br.com.grupocaravela.configuracao.EntityManagerProducer;
 import br.com.grupocaravela.ferramenta.UsuarioLogado;
-import br.com.grupocaravela.objeto.Destinatario;
 import br.com.grupocaravela.objeto.Usuario;
 
 import java.awt.Color;
@@ -75,42 +74,58 @@ public class JanelaLogin extends JFrame {
 		// iniciaConexao();
 		
 		Empresa.setIpLocalServidor(lerArquivoIp());
+			
 
 	}
 
 	private void carregarJanela() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 400, 466);
+		setBounds(100, 100, 400, 485);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 
 		JPanel panel = new JPanel();
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addComponent(panel,
-				GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 430, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(28, Short.MAX_VALUE)));
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addComponent(panel, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addComponent(panel, GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
+		);
 
 		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(JanelaLogin.class.getResource("/br/com/grupocaravela/imagens/cheque01.gif")));
+		lblNewLabel.setIcon(new ImageIcon(JanelaLogin.class.getResource("/br/com/grupocaravela/imagens/Logo_organiza_cheques.png")));
 
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new LineBorder(Color.DARK_GRAY));
+		
+		JLabel lblWwwgrupocaravelacombr = new JLabel("www.grupocaravela.com.br");
+		lblWwwgrupocaravelacombr.setFont(new Font("Neuropolitical Rg", Font.BOLD, 12));
+		lblWwwgrupocaravelacombr.setHorizontalAlignment(SwingConstants.CENTER);
 		GroupLayout gl_panel = new GroupLayout(panel);
-		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup().addContainerGap()
-						.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
-								.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE))
-				.addContainerGap()));
-		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup().addComponent(lblNewLabel)
-						.addPreferredGap(ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-						.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 161, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap()));
+		gl_panel.setHorizontalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+						.addComponent(lblWwwgrupocaravelacombr, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+						.addComponent(panel_1, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE))
+					.addContainerGap())
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addComponent(lblNewLabel)
+					.addPreferredGap(ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 161, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(lblWwwgrupocaravelacombr)
+					.addContainerGap())
+		);
 
 		JLabel lblUsuario = new JLabel("Usuario");
 		lblUsuario.setFont(new Font("Dialog", Font.BOLD, 14));
@@ -269,6 +284,8 @@ public class JanelaLogin extends JFrame {
 	private Boolean verificarUsuario(String usuario, String senha) {
 
 		iniciaConexao();
+		
+		verificaExistenciaUsuario();
 
 		Boolean retorno = false;
 
@@ -322,5 +339,36 @@ public class JanelaLogin extends JFrame {
 		}
 
 		return ip;
+	}
+	
+	private void verificaExistenciaUsuario() {
+
+		try {
+			//trx.begin();
+			Query consulta = manager.createQuery("from Usuario");
+			List<Usuario> listaUsuario = consulta.getResultList();
+			//trx.commit();
+
+			if (listaUsuario.isEmpty()) {
+				Usuario u = new Usuario();
+				
+				u.setAdiministrador(true);
+				u.setNome("Administrador");
+				u.setSenha("admin");
+				u.setUsuario("admin");
+
+				trx.begin();
+				manager.persist(u);
+				trx.commit();
+
+			}
+
+			for (int i = 0; i < listaUsuario.size(); i++) {
+				Usuario u = listaUsuario.get(i);
+
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro ao verificar e criar usuario inicial: " + e);
+		}
 	}
 }

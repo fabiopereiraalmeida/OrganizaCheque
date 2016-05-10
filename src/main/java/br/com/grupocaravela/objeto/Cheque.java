@@ -43,6 +43,11 @@ public class Cheque implements Serializable{
 	private Conta conta;
 	private Proprietario proprietario;
 	private Destinatario destinatario;
+	
+	private Double juros;
+	//private Double dias;
+	private Double lucro;
+	private Double valorPago;
 	//private Destinatario destinatarioFilho;
 	private List<Historico> historicos = new ArrayList<>();
 	
@@ -215,10 +220,45 @@ public class Cheque implements Serializable{
 		this.destinatarioFilho = destinatarioFilho;
 	}
 	*/
+	
+	@Column(name = "juros", precision=11, scale=2)
+	public Double getJuros() {
+		return juros;
+	}
+	public void setJuros(Double juros) {
+		this.juros = juros;
+	}
+	/*
+	@Column(name = "dias", precision=11, scale=2)
+	public Double getDias() {
+		return dias;
+	}
+	public void setDias(Double dias) {
+		this.dias = dias;
+	}
+	*/
+	@Column(name = "lucro", precision=11, scale=2)
+	public Double getLucro() {
+		return lucro;
+	}
+	public void setLucro(Double lucro) {
+		this.lucro = lucro;
+	}
+	
+	@Column(name = "valor_pago", precision=11, scale=2)
+	public Double getValorPago() {
+		return valorPago;
+	}
+	public void setValorPago(Double valorPago) {
+		this.valorPago = valorPago;
+	}
+	
+	
 	@OneToMany(mappedBy = "cheque", cascade = CascadeType.ALL, orphanRemoval = true)
 	public List<Historico> getHistoricos() {
 		return historicos;
 	}
+	
 	public void setHistoricos(List<Historico> historicos) {
 		this.historicos = historicos;
 	}
