@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
+
 import br.com.grupocaravela.objeto.Cheque;
 import br.com.grupocaravela.util.ConectaBanco;
 import net.sf.jasperreports.engine.JRDataSource;
@@ -22,6 +24,9 @@ import net.sf.jasperreports.view.JasperViewer;
 
 public class ChamaRelatorioMovimentacao {
 
+	ImageIcon gto = new ImageIcon(getClass().getResource("/br/com/grupocaravela/relatorios/logo_caravela.png"));
+	//map.put("LOGO", gto.getImage());
+	
 	String sistema = System.getProperty("os.name");
 
 	//método
@@ -33,6 +38,8 @@ public class ChamaRelatorioMovimentacao {
 	        
 	        URL arquivo = getClass().getResource(endereco);
 	        jasper = (JasperReport) JRLoader.loadObject(arquivo);
+	        
+	        map.put("LOGO", gto.getImage());
 	        
 	        map.put("OBSERVACAO", observacao);
 	        map.put("DESTINATARIO", destinatario);

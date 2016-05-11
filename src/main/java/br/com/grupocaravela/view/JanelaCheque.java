@@ -123,7 +123,7 @@ public class JanelaCheque extends JFrame {
 	private JTextField tfObs;
 
 	private Historico historico;
-	private JComboBox cbDestinatario;
+	private JComboBox cbDestinatarioAtual;
 	private JLabel lblImagem;
 		
 	private File arquivoFoto;
@@ -136,6 +136,7 @@ public class JanelaCheque extends JFrame {
 	private JTextField tfJuros;
 	private JTextField tfValorPago;
 	private JTextField tfLucro;
+	private JComboBox cbDestinatarioOrigem;
 	/**
 	 * Launch the application.
 	 */
@@ -483,39 +484,48 @@ public class JanelaCheque extends JFrame {
 		panel_12.setBorder(new TitledBorder(null, "Demais informa\u00E7\u00F5es", TitledBorder.LEADING,
 				TitledBorder.TOP, null, null));
 		
-		cbDestinatario = new JComboBox();
+		cbDestinatarioAtual = new JComboBox();
 		
-		JLabel lblDestinatrio = new JLabel("Destinatário:");
+		JLabel lblDestinatrio = new JLabel("Destinatário atual:");
 		
 		chbDevolvido = new JCheckBox("Devolvido");
 		chbDevolvido.setEnabled(false);
 		
 		JPanel panel_16 = new JPanel();
 		panel_16.setBorder(new TitledBorder(null, "Informa\u00E7\u00F5es de troca", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		
+		JLabel lblDestinatrioDeOrigem = new JLabel("Destinatário de origem:");
+		
+		cbDestinatarioOrigem = new JComboBox();
 		GroupLayout gl_panel_6 = new GroupLayout(panel_6);
 		gl_panel_6.setHorizontalGroup(
 			gl_panel_6.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel_6.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel_6.createParallelGroup(Alignment.TRAILING)
-						.addComponent(panel_16, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 774, Short.MAX_VALUE)
-						.addComponent(panel_12, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 774, Short.MAX_VALUE)
-						.addComponent(tfCodBarrasCheque, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 774, Short.MAX_VALUE)
-						.addComponent(lblCod, Alignment.LEADING)
-						.addGroup(Alignment.LEADING, gl_panel_6.createSequentialGroup()
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+						.addComponent(panel_16, GroupLayout.DEFAULT_SIZE, 774, Short.MAX_VALUE)
+						.addComponent(panel_12, GroupLayout.PREFERRED_SIZE, 774, Short.MAX_VALUE)
+						.addComponent(tfCodBarrasCheque, GroupLayout.DEFAULT_SIZE, 774, Short.MAX_VALUE)
+						.addComponent(lblCod)
+						.addGroup(gl_panel_6.createSequentialGroup()
 							.addComponent(panel_10, GroupLayout.PREFERRED_SIZE, 269, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(panel_11, GroupLayout.DEFAULT_SIZE, 499, Short.MAX_VALUE))
-						.addGroup(Alignment.LEADING, gl_panel_6.createSequentialGroup()
-							.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblDestinatrio)
-								.addComponent(cbDestinatario, 0, 258, Short.MAX_VALUE))
-							.addGap(423)
-							.addComponent(chbDevolvido))
-						.addGroup(Alignment.LEADING, gl_panel_6.createSequentialGroup()
+						.addGroup(gl_panel_6.createSequentialGroup()
 							.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(panel_9, GroupLayout.PREFERRED_SIZE, 225, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(panel_9, GroupLayout.PREFERRED_SIZE, 225, GroupLayout.PREFERRED_SIZE))
+						.addGroup(Alignment.TRAILING, gl_panel_6.createSequentialGroup()
+							.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+								.addComponent(cbDestinatarioOrigem, GroupLayout.PREFERRED_SIZE, 260, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblDestinatrioDeOrigem))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblDestinatrio)
+								.addGroup(gl_panel_6.createSequentialGroup()
+									.addComponent(cbDestinatarioAtual, GroupLayout.PREFERRED_SIZE, 260, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+									.addComponent(chbDevolvido)))))
 					.addContainerGap())
 		);
 		gl_panel_6.setVerticalGroup(
@@ -527,12 +537,19 @@ public class JanelaCheque extends JFrame {
 					.addComponent(tfCodBarrasCheque, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panel_6.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_panel_6.createSequentialGroup()
+								.addGap(21)
+								.addComponent(chbDevolvido))
+							.addGroup(gl_panel_6.createSequentialGroup()
+								.addComponent(lblDestinatrioDeOrigem)
+								.addPreferredGap(ComponentPlacement.RELATED)
+								.addComponent(cbDestinatarioOrigem, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 						.addGroup(gl_panel_6.createSequentialGroup()
 							.addComponent(lblDestinatrio)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(cbDestinatario, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addComponent(chbDevolvido))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(cbDestinatarioAtual, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addGap(12)
 					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING, false)
 						.addComponent(panel_9, 0, 0, Short.MAX_VALUE)
 						.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE))
@@ -544,7 +561,7 @@ public class JanelaCheque extends JFrame {
 					.addComponent(panel_12, GroupLayout.PREFERRED_SIZE, 105, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(panel_16, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(67, Short.MAX_VALUE))
+					.addContainerGap(15, Short.MAX_VALUE))
 		);
 		
 		JLabel label_1 = new JLabel("Nº Dias:");
@@ -1046,6 +1063,7 @@ public class JanelaCheque extends JFrame {
 
 		limparCampos();
 		carregajcbDestinatarioNovo();
+		carregajcbDestinatarioOrigem();
 		cheque = new Cheque();
 		tabbedPane.setSelectedIndex(1);
 		tfCodBarrasCheque.requestFocus();
@@ -1074,6 +1092,7 @@ public class JanelaCheque extends JFrame {
 	private void botaoDetalhes() {
 		limparCampos();
 		carregajcbDestinatarioTodos();
+		carregajcbDestinatarioOrigem();
 		
 		int linha = table.getSelectedRow();
         int linhaReal = table.convertRowIndexToModel(linha);
@@ -1104,7 +1123,12 @@ public class JanelaCheque extends JFrame {
 		tfCodVenda.setText(c.getCodVenda());
 		tfObs.setText(c.getObservacao());
 		
-		cbDestinatario.setSelectedItem(c.getDestinatario());
+		cbDestinatarioAtual.setSelectedItem(c.getDestinatario());
+		try {
+			cbDestinatarioOrigem.setSelectedItem(c.getDestinatarioOrigem());
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Destinatario de origem não encontrado!");
+		}		
 
 		dcEntradaData.setDate(c.getDataEntrada());
 		dcBomData.setDate(c.getDataVencimento());
@@ -1163,8 +1187,13 @@ public class JanelaCheque extends JFrame {
 		tfObs.setText("");
 		tfNumeroDias.setText("0");
 		
-		//cbDestinatario.setSelectedIndex(0);
-
+		try {
+			cbDestinatarioAtual.setSelectedIndex(-1);
+			cbDestinatarioOrigem.setSelectedIndex(-1);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		dcEntradaData.setDate(null);
 		dcBomData.setDate(null);
 
@@ -1195,14 +1224,11 @@ public class JanelaCheque extends JFrame {
 				novo = false;				
 			}
 			
-			
-			//Query consulta = manager.createQuery("FROM Destinatario WHERE id LIKE '1'");
-			//List<Destinatario> listaDestinatario = consulta.getResultList();
-
-			//destinatario = listaDestinatario.get(0);
-			destinatario = (Destinatario) cbDestinatario.getSelectedItem();
-			
-			//c.setAtivo(true);
+			try {
+				destinatario = (Destinatario) cbDestinatarioAtual.getSelectedItem();
+			} catch (Exception e) {
+				destinatario = (Destinatario) cbDestinatarioOrigem.getSelectedItem();
+			}
 			
 			if (novo) {
 				c.setVoltouUmaVez(false);
@@ -1222,6 +1248,7 @@ public class JanelaCheque extends JFrame {
 			c.setObservacao(tfObs.getText());
 			c.setValor(Double.parseDouble(tfValor.getText().replace("R$ ", "").replace(".", "").replace(",", ".")));
 			c.setDestinatario(destinatario);
+			c.setDestinatarioOrigem((Destinatario) cbDestinatarioOrigem.getSelectedItem());
 			
 			c.setTerceiros(cbTerceiros.isSelected());
 			
@@ -1727,9 +1754,9 @@ public void criarHistorico(String opearacao, Usuario u, Cheque c, Destinatario d
 		// ###############################################
 	}
 	
-	private void carregajcbDestinatarioNovo() {
+	private void carregajcbDestinatarioOrigem() {
 
-		cbDestinatario.removeAllItems();
+		cbDestinatarioOrigem.removeAllItems();
 
 		try {
 
@@ -1741,7 +1768,31 @@ public void criarHistorico(String opearacao, Usuario u, Cheque c, Destinatario d
 			for (int i = 0; i < listaDestinatarios.size(); i++) {
 
 				Destinatario d = listaDestinatarios.get(i);
-				cbDestinatario.addItem(d);
+				cbDestinatarioOrigem.addItem(d);
+			}
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro no carregamento do cbDestinatario! " + e);
+		}
+		
+		//cbDestinatario.setSelectedIndex(0);
+	}
+	
+	private void carregajcbDestinatarioNovo() {
+
+		cbDestinatarioAtual.removeAllItems();
+
+		try {
+
+			//trx.begin();
+			Query consulta = manager.createQuery("FROM Destinatario WHERE local = '1'");
+			List<Destinatario> listaDestinatarios = consulta.getResultList();
+			//trx.commit();
+
+			for (int i = 0; i < listaDestinatarios.size(); i++) {
+
+				Destinatario d = listaDestinatarios.get(i);
+				cbDestinatarioAtual.addItem(d);
 			}
 
 		} catch (Exception e) {
@@ -1753,7 +1804,7 @@ public void criarHistorico(String opearacao, Usuario u, Cheque c, Destinatario d
 	
 	private void carregajcbDestinatarioTodos() {
 
-		cbDestinatario.removeAllItems();
+		cbDestinatarioAtual.removeAllItems();
 
 		try {
 
@@ -1765,7 +1816,7 @@ public void criarHistorico(String opearacao, Usuario u, Cheque c, Destinatario d
 			for (int i = 0; i < listaDestinatarios.size(); i++) {
 
 				Destinatario d = listaDestinatarios.get(i);
-				cbDestinatario.addItem(d);
+				cbDestinatarioAtual.addItem(d);
 			}
 
 		} catch (Exception e) {

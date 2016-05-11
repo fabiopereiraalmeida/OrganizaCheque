@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.1.final using JasperReports Library version 6.2.1  -->
-<!-- 2016-04-29T16:16:04 -->
+<!-- 2016-05-10T11:03:09 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="HistoricoCheque" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df013db5-f76e-44d3-b0df-bcbc46d93160">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="controla_cheque_localhost"/>
@@ -15,6 +15,7 @@
 		</conditionalStyle>
 	</style>
 	<parameter name="ID_CHEQUE" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.awt.Image"/>
 	<queryString>
 		<![CDATA[SELECT cheque.historico.data,
 	cheque.historico.operacao,
@@ -159,19 +160,15 @@ WHERE
 	<title>
 		<band height="86" splitType="Stretch">
 			<staticText>
-				<reportElement style="Title" x="281" y="30" width="239" height="30" uuid="bc1ce1da-8232-46ea-be55-cec4abb986dd"/>
+				<reportElement style="Title" x="282" y="50" width="239" height="30" uuid="bc1ce1da-8232-46ea-be55-cec4abb986dd"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="20"/>
 				</textElement>
 				<text><![CDATA[Histórico de cheque]]></text>
 			</staticText>
 			<image>
-				<reportElement x="10" y="8" width="130" height="70" uuid="cb8f9835-8f58-4763-9a10-f456a44cbb3a"/>
-				<imageExpression><![CDATA["src/main/java/br/com/grupocaravela/relatorios/logo_caravela.png"]]></imageExpression>
-			</image>
-			<image>
-				<reportElement x="690" y="10" width="106" height="68" uuid="183c1548-9e42-407f-a270-1a46ded2a45c"/>
-				<imageExpression><![CDATA["src/main/java/br/com/grupocaravela/relatorios/Logo_organiza_cheques.png"]]></imageExpression>
+				<reportElement x="360" y="0" width="100" height="52" uuid="cb8f9835-8f58-4763-9a10-f456a44cbb3a"/>
+				<imageExpression><![CDATA[$P{LOGO}]]></imageExpression>
 			</image>
 		</band>
 	</title>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.1.final using JasperReports Library version 6.2.1  -->
-<!-- 2016-04-29T16:20:13 -->
+<!-- 2016-05-10T11:03:57 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ChequesSelecionados" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df221df7-2f69-42c4-8b19-61e425655d13">
 	<parameter name="OBSERVACAO" class="java.lang.String"/>
 	<parameter name="DESTINATARIO" class="java.lang.String"/>
 	<parameter name="VALOR_TOTAL" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.awt.Image"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -39,35 +40,31 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="101" splitType="Stretch">
+		<band height="111" splitType="Stretch">
 			<staticText>
-				<reportElement x="6" y="66" width="284" height="30" uuid="922f5689-4bb0-4987-972d-868317b4135d"/>
+				<reportElement x="6" y="78" width="284" height="30" uuid="922f5689-4bb0-4987-972d-868317b4135d"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Movimentação para o destinatário:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="290" y="66" width="259" height="30" uuid="03b42ae6-a0e8-4d4f-8d7e-801ca086c689"/>
+				<reportElement x="290" y="78" width="259" height="30" uuid="03b42ae6-a0e8-4d4f-8d7e-801ca086c689"/>
 				<textElement verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{DESTINATARIO}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="165" y="39" width="226" height="26" uuid="c6e0e586-2d7d-416d-b9a7-99916f6292b4"/>
+				<reportElement x="165" y="51" width="226" height="26" uuid="c6e0e586-2d7d-416d-b9a7-99916f6292b4"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="18" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Movimentação]]></text>
 			</staticText>
 			<image>
-				<reportElement x="8" y="5" width="110" height="58" uuid="84d42e2a-9c6f-4855-9d44-069f98b4df5a"/>
-				<imageExpression><![CDATA["src/main/java/br/com/grupocaravela/relatorios/logo_caravela.png"]]></imageExpression>
-			</image>
-			<image>
-				<reportElement x="452" y="5" width="97" height="57" uuid="62a2f3b0-8803-4d8a-ab8a-5d312c58b66d"/>
-				<imageExpression><![CDATA["src/main/java/br/com/grupocaravela/relatorios/Logo_organiza_cheques.png"]]></imageExpression>
+				<reportElement x="223" y="0" width="110" height="51" uuid="84d42e2a-9c6f-4855-9d44-069f98b4df5a"/>
+				<imageExpression><![CDATA[$P{LOGO}]]></imageExpression>
 			</image>
 		</band>
 	</title>

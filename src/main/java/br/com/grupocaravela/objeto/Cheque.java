@@ -43,6 +43,7 @@ public class Cheque implements Serializable{
 	private Conta conta;
 	private Proprietario proprietario;
 	private Destinatario destinatario;
+	private Destinatario destinatarioOrigem;
 	
 	private Double juros;
 	//private Double dias;
@@ -209,6 +210,16 @@ public class Cheque implements Serializable{
 	public void setDestinatario(Destinatario destinatario) {
 		this.destinatario = destinatario;
 	}
+		
+	@ManyToOne
+	@JoinColumn(name = "destinatario_origem_id")
+	public Destinatario getDestinatarioOrigem() {
+		return destinatarioOrigem;
+	}
+	
+	public void setDestinatarioOrigem(Destinatario destinatarioOrigem) {
+		this.destinatarioOrigem = destinatarioOrigem;
+	}
 	
 	/*
 	@ManyToOne
@@ -220,6 +231,7 @@ public class Cheque implements Serializable{
 		this.destinatarioFilho = destinatarioFilho;
 	}
 	*/
+		
 	
 	@Column(name = "juros", precision=11, scale=2)
 	public Double getJuros() {

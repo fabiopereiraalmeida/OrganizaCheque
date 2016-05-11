@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.2.1.final using JasperReports Library version 6.2.1  -->
-<!-- 2016-04-29T16:21:36 -->
+<!-- 2016-05-10T11:05:26 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ChequesSelecionados" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df221df7-2f69-42c4-8b19-61e425655d13">
 	<parameter name="VALOR_TOTAL" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.awt.Image"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -37,21 +38,17 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="85" splitType="Stretch">
+		<band height="92" splitType="Stretch">
 			<staticText>
-				<reportElement x="160" y="21" width="239" height="40" uuid="922f5689-4bb0-4987-972d-868317b4135d"/>
+				<reportElement x="160" y="57" width="239" height="32" uuid="922f5689-4bb0-4987-972d-868317b4135d"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="20" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Lista de Cheques]]></text>
 			</staticText>
 			<image>
-				<reportElement x="10" y="8" width="130" height="70" uuid="a690e662-d821-4b28-8d1e-0abc7baf38e5"/>
-				<imageExpression><![CDATA["src/main/java/br/com/grupocaravela/relatorios/logo_caravela.png"]]></imageExpression>
-			</image>
-			<image>
-				<reportElement x="440" y="9" width="106" height="68" uuid="53d536a1-5b10-4205-9fcc-44b2b32fecf1"/>
-				<imageExpression><![CDATA["src/main/java/br/com/grupocaravela/relatorios/Logo_organiza_cheques.png"]]></imageExpression>
+				<reportElement x="216" y="0" width="130" height="57" uuid="a690e662-d821-4b28-8d1e-0abc7baf38e5"/>
+				<imageExpression><![CDATA[$P{LOGO}]]></imageExpression>
 			</image>
 		</band>
 	</title>

@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
+
 import br.com.grupocaravela.objeto.Cheque;
 import br.com.grupocaravela.util.ConectaBanco;
 import net.sf.jasperreports.engine.JRException;
@@ -19,6 +21,9 @@ import net.sf.jasperreports.view.JasperViewer;
 public class ChamaRelatorio {
 
 	String sistema = System.getProperty("os.name");
+	
+	ImageIcon gto = new ImageIcon(getClass().getResource("/br/com/grupocaravela/relatorios/logo_caravela.png"));
+	//map.put("LOGO", gto.getImage());
 
 	//método
 	    public void report(String endereco, Cheque cheque, Date dataInicial, Date dataFinal) throws JRException {
@@ -31,6 +36,8 @@ public class ChamaRelatorio {
 
 	        URL arquivo = getClass().getResource(endereco);
 	        jasper = (JasperReport) JRLoader.loadObject(arquivo);
+	        
+	        map.put("LOGO", gto.getImage());
 	        
 	        if (cheque != null) {
 	        	//map.put("ID_CHEQUE", "6");
