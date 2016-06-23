@@ -51,6 +51,7 @@ public class Cheque implements Serializable{
 	private Double valorPago;
 	//private Destinatario destinatarioFilho;
 	private List<Historico> historicos = new ArrayList<>();
+	private List<Beneficiado> beneficiados = new ArrayList<>();
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -265,7 +266,6 @@ public class Cheque implements Serializable{
 		this.valorPago = valorPago;
 	}
 	
-	
 	@OneToMany(mappedBy = "cheque", cascade = CascadeType.ALL, orphanRemoval = true)
 	public List<Historico> getHistoricos() {
 		return historicos;
@@ -274,7 +274,15 @@ public class Cheque implements Serializable{
 	public void setHistoricos(List<Historico> historicos) {
 		this.historicos = historicos;
 	}
-				
+		
+	@OneToMany(mappedBy = "cheque", cascade = CascadeType.ALL, orphanRemoval = true)			
+	public List<Beneficiado> getBeneficiados() {
+		return beneficiados;
+	}
+	public void setBeneficiados(List<Beneficiado> beneficiados) {
+		this.beneficiados = beneficiados;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

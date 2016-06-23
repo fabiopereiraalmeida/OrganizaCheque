@@ -2,7 +2,7 @@ package br.com.grupocaravela.configuracao;
 
 public class Empresa {
 
-	private static String nomeEpresa = "Esquadromil";
+	private static String nomeEpresa = "Empresa";
 	private static String ipLocalServidor = "localhost";
 	private static String portaLocalHttpServidor = "80";
 	private static String portaMysqlLocalServidor = "3306";

@@ -66,8 +66,10 @@ import br.com.grupocaravela.configuracao.BackUp;
 import br.com.grupocaravela.configuracao.EntityManagerProducer;
 import br.com.grupocaravela.dialog.MovimentarCheque;
 import br.com.grupocaravela.dialog.ObservacaoCheque;
+import br.com.grupocaravela.dialog.Sobre;
 import br.com.grupocaravela.ferramenta.UsuarioLogado;
 import br.com.grupocaravela.mask.DecimalFormattedField;
+import br.com.grupocaravela.objeto.Beneficiado;
 import br.com.grupocaravela.objeto.Cheque;
 import br.com.grupocaravela.objeto.Destinatario;
 import br.com.grupocaravela.objeto.Historico;
@@ -80,6 +82,8 @@ import br.com.grupocaravela.render.DateRenderer;
 import br.com.grupocaravela.render.MoedaRender;
 import br.com.grupocaravela.tablemodel.TableModelHistorico;
 import br.com.grupocaravela.tablemodel.TableModelJanelaPrincipal;
+import br.com.grupocaravela.tablemodel.TableModelJanelaPrincipalJuros;
+
 import javax.swing.JComboBox;
 
 public class JanelaMenuPrincipal extends JFrame {
@@ -87,6 +91,7 @@ public class JanelaMenuPrincipal extends JFrame {
 	private EntityManager manager;
 	private EntityTransaction trx;
 	private TableModelJanelaPrincipal tableModelJanelaPrincipal;
+	private TableModelJanelaPrincipalJuros tableModelJanelaPrincipalJuros;
 	private TableModelHistorico tableModelHistorico;
 
 	private JPanel contentPane;
@@ -108,7 +113,7 @@ public class JanelaMenuPrincipal extends JFrame {
 	private JCheckBox chbFiltrarPorDataVencimento;
 
 	private SimpleDateFormat formatSql = new SimpleDateFormat("yyyy-MM-dd");
-	private SimpleDateFormat formatSqlHora = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	//private SimpleDateFormat formatSqlHora = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 	private SimpleDateFormat formatData = new SimpleDateFormat("dd/MM/yyyy");
@@ -129,7 +134,7 @@ public class JanelaMenuPrincipal extends JFrame {
 	private JTextField tfHistoricoBomPara;
 	private JTextField tfHistoricoValor;
 
-	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+	//private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
 	private JMenuItem mntmUsurio;
 	private JTextField tfTotalCheques;
 	private JMenuItem mntmDownloadBackup;
@@ -137,9 +142,9 @@ public class JanelaMenuPrincipal extends JFrame {
 	private JCheckBox chckbxSelecionarTudo;
 
 	private TableCellRenderer renderer = new CoresJTable();
-	private TableCellRenderer rendererDate = new DateCellRenderer();
+	//private TableCellRenderer rendererDate = new DateCellRenderer();
 	private JCheckBox chbDataEntr;
-	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
+	//private final ButtonGroup buttonGroup_1 = new ButtonGroup();
 	private JButton btnMovimentar;
 	private JTextField tfQtdChequesDebitadosOrigem;
 	private JTextField tfChequesDebitadosValorTotal;
@@ -160,6 +165,7 @@ public class JanelaMenuPrincipal extends JFrame {
 	private ArrayList<Cheque> listChequeCriados = new ArrayList<>();
 	private ArrayList<Cheque> listChequeVencidos = new ArrayList<>();
 	private ArrayList<Cheque> listChequeLucro = new ArrayList<>();
+	private ArrayList<Beneficiado> listBeneficiado = new ArrayList<>();
 	//private ArrayList<Cheque> listChequeHistorico = new ArrayList<>();
 	private final ButtonGroup buttonGroup_2 = new ButtonGroup();
 	private JButton btnGerarRelatrioDebitados;
@@ -185,6 +191,12 @@ public class JanelaMenuPrincipal extends JFrame {
 	private JTextField tfLucroLucro;
 	private JButton btnGerarRelatrio;
 	private JButton btnFiltrarLucro;
+	private JTextField tfLucroTotalLucro;
+	private JCheckBox chckbxMostrarLucro;
+	private JTextField tfMediaJuros;
+	private JTextField tfMediaLucroTotal;
+	private JLabel lblMdiaDeJuros_1;
+	private JLabel lblELucroTotal;
 	/**
 	 * Launch the application.
 	 */
@@ -224,8 +236,6 @@ public class JanelaMenuPrincipal extends JFrame {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
-		carregajcbDestinatarioOrigem();
 		
 		
 		table.setAutoCreateRowSorter(true);
@@ -411,7 +421,12 @@ public class JanelaMenuPrincipal extends JFrame {
 							
 							for (int i = 0; i < listChequeCriados.size(); i++) {
 								Cheque b = listChequeCriados.get(i);
-								tableModelJanelaPrincipal.addCheque(b);
+								
+								if (chckbxMostrarLucro.isSelected()) {
+									tableModelJanelaPrincipalJuros.addCheque(b);
+								}else{
+									tableModelJanelaPrincipal.addCheque(b);
+								}
 							}
 							
 							tfTotal.setText(calcularTotalChequesFiltrados().toString());
@@ -630,7 +645,12 @@ public class JanelaMenuPrincipal extends JFrame {
 							
 							for (int i = 0; i < listChequeVencidos.size(); i++) {
 								Cheque b = listChequeVencidos.get(i);
-								tableModelJanelaPrincipal.addCheque(b);
+								
+								if (chckbxMostrarLucro.isSelected()) {
+									tableModelJanelaPrincipalJuros.addCheque(b);
+								}else{
+									tableModelJanelaPrincipal.addCheque(b);
+								}
 							}
 							
 							tfTotal.setText(calcularTotalChequesFiltrados().toString());
@@ -860,7 +880,12 @@ public class JanelaMenuPrincipal extends JFrame {
 							
 							for (int i = 0; i < listChequeCredito.size(); i++) {
 								Cheque b = listChequeCredito.get(i);
-								tableModelJanelaPrincipal.addCheque(b);
+								
+								if (chckbxMostrarLucro.isSelected()) {
+									tableModelJanelaPrincipalJuros.addCheque(b);
+								}else{
+									tableModelJanelaPrincipal.addCheque(b);
+								}
 							}
 							
 							tfTotal.setText(calcularTotalChequesFiltrados().toString());
@@ -1028,7 +1053,12 @@ public class JanelaMenuPrincipal extends JFrame {
 							
 							for (int i = 0; i < listChequeDebito.size(); i++) {
 								Cheque b = listChequeDebito.get(i);
-								tableModelJanelaPrincipal.addCheque(b);
+								
+								if (chckbxMostrarLucro.isSelected()) {
+									tableModelJanelaPrincipalJuros.addCheque(b);
+								}else{
+									tableModelJanelaPrincipal.addCheque(b);
+								}
 							}
 							
 							tfTotal.setText(calcularTotalChequesFiltrados().toString());
@@ -1109,7 +1139,7 @@ public class JanelaMenuPrincipal extends JFrame {
 		panel_6.setBorder(new TitledBorder(null, "Detalhes", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		JPanel panel_7 = new JPanel();
-		panel_7.setBorder(new TitledBorder(null, "Filtro", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_7.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Filtro individual", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51)));
 		GroupLayout gl_panel_5 = new GroupLayout(panel_5);
 		gl_panel_5.setHorizontalGroup(
 			gl_panel_5.createParallelGroup(Alignment.LEADING)
@@ -1122,12 +1152,12 @@ public class JanelaMenuPrincipal extends JFrame {
 		);
 		gl_panel_5.setVerticalGroup(
 			gl_panel_5.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_5.createSequentialGroup()
-					.addContainerGap()
+				.addGroup(Alignment.TRAILING, gl_panel_5.createSequentialGroup()
+					.addContainerGap(245, Short.MAX_VALUE)
 					.addComponent(panel_7, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(245, Short.MAX_VALUE))
+					.addContainerGap())
 		);
 		
 		JLabel lblDestinatrio = new JLabel("Destinatário:");
@@ -1236,7 +1266,7 @@ public class JanelaMenuPrincipal extends JFrame {
 		
 		JLabel lblTotalDeCheques_1 = new JLabel("Total de cheques:");
 		
-		tfTotalChequesLucro = new DecimalFormattedField(DecimalFormattedField.REAL);
+		tfTotalChequesLucro = new JTextField();
 		tfTotalChequesLucro.setEnabled(false);
 		tfTotalChequesLucro.setEditable(false);
 		tfTotalChequesLucro.setColumns(10);
@@ -1252,7 +1282,7 @@ public class JanelaMenuPrincipal extends JFrame {
 		
 		JLabel lblMdiaDeJuros = new JLabel("Média  de juros:");
 		
-		JLabel lblLucro = new JLabel("Lucro:");
+		JLabel lblLucro = new JLabel("Lucro individual:");
 		
 		JLabel lblValorPago = new JLabel("Valor pago:");
 		
@@ -1294,9 +1324,8 @@ public class JanelaMenuPrincipal extends JFrame {
 						try {
 							Destinatario dest = (Destinatario) cbDestinatarioLucro.getSelectedItem();							
 
-							chamaRelatorioChequesSelecionados.reportLucro("ChequesLucro.jasper", listChequeLucro,
-									tfValorTotalChequesLucro.getText(), tfValorPagoLucro.getText(), tfLucroLucro.getText(), tfMediaJurosLucro.getText(),
-									dest.getNome(), formatData.format(dcInicialLucro.getDate()), formatData.format(dcFinalLucro.getDate()));
+							chamaRelatorioChequesSelecionados.reportLucroIndividual("LucroIndividual.jasper", tfValorTotalChequesLucro.getText(), tfValorPagoLucro.getText(), tfLucroLucro.getText(), tfLucroTotalLucro.getText(), tfMediaJurosLucro.getText(),
+									dest.getNome(), dest.getId().toString(), formatData.format(dcInicialLucro.getDate()), formatData.format(dcFinalLucro.getDate()), formatSql.format(dcInicialLucro.getDate()), formatSql.format(dcFinalLucro.getDate()));
 
 						} catch (Exception e2) {
 							JOptionPane.showMessageDialog(null, "ERRO! Não foi possível gerar o relatório solicitado: " + e2);
@@ -1330,6 +1359,14 @@ public class JanelaMenuPrincipal extends JFrame {
 			}
 		});
 		btnGerarRelatrio.setIcon(new ImageIcon(JanelaMenuPrincipal.class.getResource("/br/com/grupocaravela/icones/relatorios_64.png")));
+		
+		JLabel lblLucroTotal = new JLabel("Lucro total:");
+		
+		tfLucroTotalLucro = new DecimalFormattedField(DecimalFormattedField.REAL);
+		tfLucroTotalLucro.setEnabled(false);
+		tfLucroTotalLucro.setDisabledTextColor(Color.BLACK);
+		tfLucroTotalLucro.setEditable(false);
+		tfLucroTotalLucro.setColumns(10);
 		GroupLayout gl_panel_6 = new GroupLayout(panel_6);
 		gl_panel_6.setHorizontalGroup(
 			gl_panel_6.createParallelGroup(Alignment.LEADING)
@@ -1349,47 +1386,52 @@ public class JanelaMenuPrincipal extends JFrame {
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(tfMediaJurosLucro)))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING, false)
+					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel_6.createSequentialGroup()
 							.addComponent(lblValorPago)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(tfValorPagoLucro))
+							.addComponent(tfValorPagoLucro, 150, 150, 150))
 						.addGroup(gl_panel_6.createSequentialGroup()
-							.addComponent(lblLucro)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(tfLucroLucro)))
-					.addGap(18)
+							.addGroup(gl_panel_6.createParallelGroup(Alignment.TRAILING, false)
+								.addGroup(gl_panel_6.createSequentialGroup()
+									.addComponent(lblLucro)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(tfLucroLucro, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+								.addGroup(Alignment.LEADING, gl_panel_6.createSequentialGroup()
+									.addComponent(lblLucroTotal)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(tfLucroTotalLucro, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)))
+							.addGap(18)))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(btnGerarRelatrio)
-					.addContainerGap(117, Short.MAX_VALUE))
+					.addContainerGap(36, Short.MAX_VALUE))
 		);
 		gl_panel_6.setVerticalGroup(
 			gl_panel_6.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_6.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel_6.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_6.createParallelGroup(Alignment.BASELINE)
+							.addComponent(lblValorPago)
+							.addComponent(tfValorPagoLucro, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_panel_6.createSequentialGroup()
 							.addGroup(gl_panel_6.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblValorPago)
-								.addComponent(tfValorPagoLucro, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addComponent(lblTotalDeCheques_1)
+								.addComponent(tfTotalChequesLucro, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addGroup(gl_panel_6.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblLucro)
-								.addComponent(tfLucroLucro, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(gl_panel_6.createSequentialGroup()
-							.addGroup(gl_panel_6.createSequentialGroup()
-								.addGroup(gl_panel_6.createParallelGroup(Alignment.BASELINE)
-									.addComponent(lblTotalDeCheques_1)
-									.addComponent(tfTotalChequesLucro, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-								.addPreferredGap(ComponentPlacement.UNRELATED)
-								.addGroup(gl_panel_6.createParallelGroup(Alignment.BASELINE)
-									.addComponent(lblValorTotalDos)
-									.addComponent(tfValorTotalChequesLucro, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(lblValorTotalDos)
+								.addComponent(tfValorTotalChequesLucro, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblLucroTotal)
+								.addComponent(tfLucroTotalLucro, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addGroup(gl_panel_6.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblMdiaDeJuros)
-								.addComponent(tfMediaJurosLucro, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+								.addComponent(tfMediaJurosLucro, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblLucro)
+								.addComponent(tfLucroLucro, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 						.addComponent(btnGerarRelatrio, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(77, Short.MAX_VALUE))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		panel_6.setLayout(gl_panel_6);
 		panel_5.setLayout(gl_panel_5);
@@ -1434,12 +1476,14 @@ public class JanelaMenuPrincipal extends JFrame {
 		}
 
 		// Render das datas
-		table.getColumnModel().getColumn(6).setCellRenderer(new DateRenderer());
-		table.getColumnModel().getColumn(0).setCellRenderer(new DateRenderer());
+		//table.getColumnModel().getColumn(6).setCellRenderer(new DateRenderer());
+		//table.getColumnModel().getColumn(0).setCellRenderer(new DateRenderer());
 
 		corCelula();
 		
 		carregajcbDestinatarioOrigem();
+		
+		ativaDadosLucro(false);
 
 	}
 
@@ -1473,7 +1517,7 @@ public class JanelaMenuPrincipal extends JFrame {
 		});
 
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 956, 680);
+		setBounds(100, 100, 1002, 680);
 
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setFont(new Font("Dialog", Font.BOLD, 14));
@@ -1787,6 +1831,19 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			}
 		});
+		
+		JMenuItem mntmConfiguraes = new JMenuItem("Configurações");
+		mntmConfiguraes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				JanelaConfiguracao configuracao = new JanelaConfiguracao();
+				configuracao.setVisible(true);
+				configuracao.setLocationRelativeTo(null);
+				
+			}
+		});
+		mntmConfiguraes.setIcon(new ImageIcon(JanelaMenuPrincipal.class.getResource("/br/com/grupocaravela/icones/configure_24.png")));
+		mnFerramentas.add(mntmConfiguraes);
 		mnFerramentas.add(mntmDownloadBackup);
 
 		mntmUploadBackup = new JMenuItem("Upload Backup");
@@ -1826,6 +1883,16 @@ public class JanelaMenuPrincipal extends JFrame {
 		menuBar.add(mnAjuda);
 
 		JMenuItem mntmSobre = new JMenuItem("Sobre");
+		mntmSobre.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				Sobre sobre = new Sobre();
+				sobre.setModal(true);
+				sobre.setLocationRelativeTo(null);
+				sobre.setVisible(true);
+				
+			}
+		});
 		mntmSobre.setIcon(
 				new ImageIcon(JanelaMenuPrincipal.class.getResource("/br/com/grupocaravela/icones/sobre_24.png")));
 		mnAjuda.add(mntmSobre);
@@ -1859,17 +1926,18 @@ public class JanelaMenuPrincipal extends JFrame {
 		gl_panel_8.setHorizontalGroup(
 			gl_panel_8.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel_8.createSequentialGroup()
-					.addGroup(gl_panel_8.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_panel_8.createParallelGroup(Alignment.TRAILING, false)
 						.addGroup(gl_panel_8.createSequentialGroup()
 							.addGap(78)
 							.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 341, GroupLayout.PREFERRED_SIZE))
-						.addGroup(Alignment.TRAILING, gl_panel_8.createSequentialGroup()
+						.addGroup(Alignment.LEADING, gl_panel_8.createSequentialGroup()
 							.addContainerGap()
 							.addGroup(gl_panel_8.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblLicenciadoPara)
 								.addComponent(lblEmpresa))
-							.addPreferredGap(ComponentPlacement.RELATED, 186, Short.MAX_VALUE)
-							.addComponent(lblNewLabel)))
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(lblNewLabel)
+							.addGap(37)))
 					.addContainerGap())
 		);
 		gl_panel_8.setVerticalGroup(
@@ -1878,14 +1946,13 @@ public class JanelaMenuPrincipal extends JFrame {
 					.addComponent(label_1)
 					.addGroup(gl_panel_8.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel_8.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblNewLabel, GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
-							.addGap(48))
-						.addGroup(gl_panel_8.createSequentialGroup()
 							.addComponent(lblLicenciadoPara)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(lblEmpresa)
-							.addGap(57))))
+							.addComponent(lblEmpresa))
+						.addGroup(gl_panel_8.createSequentialGroup()
+							.addGap(6)
+							.addComponent(lblNewLabel)))
+					.addContainerGap())
 		);
 		panel_8.setLayout(gl_panel_8);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -1895,28 +1962,27 @@ public class JanelaMenuPrincipal extends JFrame {
 					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 30, Short.MAX_VALUE)
+							.addComponent(panel_6, GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 448, GroupLayout.PREFERRED_SIZE))
-						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-							.addComponent(tabbedPane)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)))
-					.addGap(0))
+							.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 399, Short.MAX_VALUE))
+						.addComponent(tabbedPane, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 868, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(12)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(tabbedPane)))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
-						.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE))
-					.addGap(0))
+							.addComponent(tabbedPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(panel_8, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
+								.addComponent(panel_6, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap())
 		);
 
 		JLabel lblUsuario = new JLabel("Usuário:");
@@ -2322,14 +2388,28 @@ public class JanelaMenuPrincipal extends JFrame {
 				for (int i = 0; i < table.getRowCount(); i++) {
 					boolean isChecked = false;
 					try {
-						isChecked = (boolean) table.getValueAt(i, 10);
+						if (chckbxMostrarLucro.isSelected()) {
+							isChecked = (boolean) table.getValueAt(i, 10);
+						}else{
+							isChecked = (boolean) table.getValueAt(i, 10);
+						}
+						
 					} catch (Exception e2) {
 						isChecked = false;
 					}
 
 					if (isChecked) {
 						int linhaReal = table.convertRowIndexToModel(i);
-						Cheque c = tableModelJanelaPrincipal.getCheque(linhaReal);
+						
+						Cheque c;
+						
+						if (chckbxMostrarLucro.isSelected()) {
+							c = tableModelJanelaPrincipalJuros.getCheque(linhaReal);
+						}else{
+							c = tableModelJanelaPrincipal.getCheque(linhaReal);
+						}
+						
+						//Cheque c = tableModelJanelaPrincipal.getCheque(linhaReal);
 						c.setSelecionado(false);
 						listaCheque.add(c);
 					}
@@ -2571,8 +2651,11 @@ public class JanelaMenuPrincipal extends JFrame {
 		lblTotalDeCheques.setFont(new Font("Dialog", Font.BOLD, 14));
 
 		tfTotal = new DecimalFormattedField(DecimalFormattedField.REAL);
+		tfTotal.setEnabled(false);
+		tfTotal.setEditable(false);
 		tfTotal.setFont(new Font("Dialog", Font.BOLD, 14));
 		tfTotal.setColumns(10);
+		tfTotal.setDisabledTextColor(Color.BLACK);
 
 		JButton btnImprimir_1 = new JButton("imprimir");
 		btnImprimir_1.setIcon(
@@ -2594,14 +2677,28 @@ public class JanelaMenuPrincipal extends JFrame {
 					boolean isChecked = false;
 
 					try {
-						isChecked = (boolean) table.getValueAt(i, 10);
+						if (chckbxMostrarLucro.isSelected()) {
+							isChecked = (boolean) table.getValueAt(i, 10);
+						}else{
+							isChecked = (boolean) table.getValueAt(i, 10);
+						}						
+						
 					} catch (Exception e2) {
 						isChecked = false;
 					}
 
 					if (isChecked) {
 						int linhaReal = table.convertRowIndexToModel(i);
-						Cheque c = tableModelJanelaPrincipal.getCheque(linhaReal);
+						
+						Cheque c;
+						
+						if (chckbxMostrarLucro.isSelected()) {
+							c = tableModelJanelaPrincipalJuros.getCheque(linhaReal);
+						}else{
+							c = tableModelJanelaPrincipal.getCheque(linhaReal);
+						}
+						
+						//Cheque c = tableModelJanelaPrincipal.getCheque(linhaReal);
 						// c.setSelecionado(false);
 						listaCheque.add(c);
 					}
@@ -2622,40 +2719,90 @@ public class JanelaMenuPrincipal extends JFrame {
 		});
 
 		tfTotalCheques = new JTextField();
+		tfTotalCheques.setEnabled(false);
+		tfTotalCheques.setEditable(false);
 		tfTotalCheques.setHorizontalAlignment(SwingConstants.CENTER);
 		tfTotalCheques.setColumns(10);
+		tfTotalCheques.setDisabledTextColor(Color.BLACK);
 
-		JLabel lblCheques = new JLabel("cheques:");
+		JLabel lblCheques = new JLabel("cheque(s):");
 		lblCheques.setFont(new Font("Dialog", Font.BOLD, 14));
+		
+		lblMdiaDeJuros_1 = new JLabel("Média de juros");		
+		lblMdiaDeJuros_1.setFont(new Font("Dialog", Font.BOLD, 14));
+				
+		tfMediaJuros = new DecimalFormattedField(DecimalFormattedField.PORCENTAGEM);
+		tfMediaJuros.setFont(new Font("Dialog", Font.PLAIN, 14));
+		tfMediaJuros.setEnabled(false);
+		tfMediaJuros.setEditable(false);
+		tfMediaJuros.setColumns(10);
+		tfMediaJuros.setDisabledTextColor(Color.BLACK);
+		
+		lblELucroTotal = new JLabel("e lucro total");
+		lblELucroTotal.setFont(new Font("Dialog", Font.BOLD, 14));
+		
+		tfMediaLucroTotal = new DecimalFormattedField(DecimalFormattedField.REAL);
+		tfMediaLucroTotal.setFont(new Font("Dialog", Font.PLAIN, 14));
+		tfMediaLucroTotal.setEnabled(false);
+		tfMediaLucroTotal.setEditable(false);
+		tfMediaLucroTotal.setColumns(10);
+		tfMediaLucroTotal.setDisabledTextColor(Color.BLACK);
+		
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
-				gl_panel.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel.createSequentialGroup().addContainerGap().addComponent(lblTotalDeCheques)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(tfTotalCheques, GroupLayout.PREFERRED_SIZE, 80,
-										GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(lblCheques, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(tfTotal, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-								.addComponent(btnImprimir_1).addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(btnHistorico).addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(btnMovimentar).addContainerGap())
-				.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, 847, Short.MAX_VALUE));
-		gl_panel.setVerticalGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
-						.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE).addComponent(btnMovimentar)
-								.addComponent(btnHistorico).addComponent(lblTotalDeCheques)
-								.addComponent(tfTotalCheques, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnImprimir_1, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblCheques, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-						.addComponent(tfTotal, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE,
-								GroupLayout.PREFERRED_SIZE))
-						.addContainerGap()));
+					.addContainerGap()
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel.createSequentialGroup()
+							.addComponent(lblTotalDeCheques)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(tfTotalCheques, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblCheques, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(tfTotal, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addComponent(lblMdiaDeJuros_1)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(tfMediaJuros, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(lblELucroTotal)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(tfMediaLucroTotal, GroupLayout.PREFERRED_SIZE, 93, GroupLayout.PREFERRED_SIZE)))
+					.addPreferredGap(ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+					.addComponent(btnImprimir_1)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnHistorico)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnMovimentar)
+					.addContainerGap())
+				.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+							.addComponent(btnHistorico, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
+							.addComponent(btnMovimentar, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE)
+							.addComponent(btnImprimir_1, GroupLayout.PREFERRED_SIZE, 48, GroupLayout.PREFERRED_SIZE))
+						.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
+							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblTotalDeCheques)
+								.addComponent(tfTotalCheques, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblCheques, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+								.addComponent(tfTotal, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblMdiaDeJuros_1)
+								.addComponent(tfMediaJuros, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblELucroTotal)
+								.addComponent(tfMediaLucroTotal, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap())
+		);
 
 		JScrollPane scrollPane = new JScrollPane();
 
@@ -2697,14 +2844,28 @@ public class JanelaMenuPrincipal extends JFrame {
 				for (int i = 0; i < table.getRowCount(); i++) {
 					boolean isChecked = false;
 					try {
-						isChecked = (boolean) table.getValueAt(i, 10);
+						if (chckbxMostrarLucro.isSelected()) {
+							isChecked = (boolean) table.getValueAt(i, 10);
+						}else{
+							isChecked = (boolean) table.getValueAt(i, 10);
+						}
+						
 					} catch (Exception e2) {
 						isChecked = false;
 					}
 
 					if (isChecked) {
 						int linhaReal = table.convertRowIndexToModel(i);
-						Cheque c = tableModelJanelaPrincipal.getCheque(linhaReal);
+						
+						Cheque c;
+						
+						if (chckbxMostrarLucro.isSelected()) {
+							c = tableModelJanelaPrincipalJuros.getCheque(linhaReal);
+						}else{
+							c = tableModelJanelaPrincipal.getCheque(linhaReal);
+						}
+						
+						//Cheque c = tableModelJanelaPrincipal.getCheque(linhaReal);
 						listaCheque.add(c);
 					}
 				}
@@ -2737,25 +2898,52 @@ public class JanelaMenuPrincipal extends JFrame {
 				selecao();
 			}
 		});
+		
+		chckbxMostrarLucro = new JCheckBox("Mostrar lucro");
+		chckbxMostrarLucro.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				
+				tfTotal.setText("0");
+				tfTotalCheques.setText("0");
+				tfMediaLucroTotal.setText("0");
+				tfMediaJuros.setText("0");
+				
+				if (chckbxMostrarLucro.isSelected()) {				
+					carregarTableModelLucro();
+					ativaDadosLucro(true);
+				}else{
+					carregarTableModel();
+					ativaDadosLucro(false);
+				}				
+			}
+		});
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
-		gl_panel_2.setHorizontalGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2.createSequentialGroup().addContainerGap()
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-								.addComponent(scrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 823,
-										Short.MAX_VALUE)
-								.addComponent(chckbxSelecionarTudo, Alignment.TRAILING).addComponent(panel_4,
-										Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 823, Short.MAX_VALUE))
-				.addContainerGap()));
-		gl_panel_2
-				.setVerticalGroup(
-						gl_panel_2.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel_2.createSequentialGroup().addContainerGap()
-										.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 136,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED).addComponent(chckbxSelecionarTudo)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
-										.addContainerGap()));
+		gl_panel_2.setHorizontalGroup(
+			gl_panel_2.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_2.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
+						.addComponent(scrollPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 839, Short.MAX_VALUE)
+						.addGroup(Alignment.TRAILING, gl_panel_2.createSequentialGroup()
+							.addComponent(chckbxMostrarLucro)
+							.addPreferredGap(ComponentPlacement.RELATED, 573, Short.MAX_VALUE)
+							.addComponent(chckbxSelecionarTudo))
+						.addComponent(panel_4, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 839, Short.MAX_VALUE))
+					.addContainerGap())
+		);
+		gl_panel_2.setVerticalGroup(
+			gl_panel_2.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_2.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_panel_2.createParallelGroup(Alignment.BASELINE)
+						.addComponent(chckbxSelecionarTudo)
+						.addComponent(chckbxMostrarLucro))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+					.addContainerGap())
+		);
 
 		tfLocalizar = new JTextField();
 		tfLocalizar.setHorizontalAlignment(SwingConstants.CENTER);
@@ -3135,6 +3323,26 @@ public class JanelaMenuPrincipal extends JFrame {
 
 		DefaultTableCellRenderer cellRendererCustomMoeda = new MoedaRender(numeroMoeda);
 		table.getColumnModel().getColumn(5).setCellRenderer(cellRendererCustomMoeda);
+		
+		// Render das datas
+		table.getColumnModel().getColumn(6).setCellRenderer(new DateRenderer());
+		table.getColumnModel().getColumn(0).setCellRenderer(new DateRenderer());
+
+	}
+	
+	private void carregarTableModelLucro() {
+		this.tableModelJanelaPrincipalJuros = new TableModelJanelaPrincipalJuros();
+		this.table.setModel(tableModelJanelaPrincipalJuros);
+
+		NumberFormat numeroMoeda = NumberFormat.getNumberInstance();
+		numeroMoeda.setMinimumFractionDigits(2);
+
+		DefaultTableCellRenderer cellRendererCustomMoeda = new MoedaRender(numeroMoeda);
+		table.getColumnModel().getColumn(5).setCellRenderer(cellRendererCustomMoeda);
+		
+		// Render das datas
+		table.getColumnModel().getColumn(6).setCellRenderer(new DateRenderer());
+		table.getColumnModel().getColumn(0).setCellRenderer(new DateRenderer());
 
 	}
 
@@ -3198,7 +3406,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3220,7 +3433,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3242,7 +3460,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3261,7 +3484,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3280,7 +3508,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3298,7 +3531,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3317,7 +3555,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3336,7 +3579,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3354,7 +3602,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3373,7 +3626,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3392,7 +3650,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3411,7 +3674,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3430,7 +3698,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3448,7 +3721,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3466,7 +3744,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3482,7 +3765,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3499,7 +3787,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3516,7 +3809,12 @@ public class JanelaMenuPrincipal extends JFrame {
 
 			for (int i = 0; i < listaCheques.size(); i++) {
 				Cheque b = listaCheques.get(i);
-				tableModelJanelaPrincipal.addCheque(b);
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					tableModelJanelaPrincipalJuros.addCheque(b);
+				}else{
+					tableModelJanelaPrincipal.addCheque(b);
+				}
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Erro ao carregar a tabela de cheques: " + e);
@@ -3559,7 +3857,7 @@ public class JanelaMenuPrincipal extends JFrame {
 				}
 
 				tfTotal.setText(calcularTotalChequesFiltrados().toString());
-
+				
 				// ######################FIM METODO A SER
 				// EXECUTADO##############################
 			}
@@ -3795,7 +4093,12 @@ public class JanelaMenuPrincipal extends JFrame {
 		int linha = table.getSelectedRow();
 		int linhaReal = table.convertRowIndexToModel(linha);
 
-		cheque = tableModelJanelaPrincipal.getCheque(linhaReal);
+		if (chckbxMostrarLucro.isSelected()) {
+			cheque = tableModelJanelaPrincipalJuros.getCheque(linhaReal);
+		}else{
+			cheque = tableModelJanelaPrincipal.getCheque(linhaReal);
+		}
+		//cheque = tableModelJanelaPrincipal.getCheque(linhaReal);
 
 		tfHistoricoBomPara.setText(formatData.format(cheque.getDataVencimento()));
 		tfHistoricoDataEntrada.setText(formatData.format(cheque.getDataEntrada()));
@@ -3867,14 +4170,37 @@ public class JanelaMenuPrincipal extends JFrame {
 	private Double calcularTotalChequesFiltrados() {
 
 		Double total = 0.0;
+		Double totalLucro = 0.0;
+		Double mediaJuros = 0.0;
 
 		for (int i = 0; i < table.getRowCount(); i++) {
-			Cheque c = tableModelJanelaPrincipal.getCheque(i);
+			
+			Cheque c;
+			
+			if (chckbxMostrarLucro.isSelected()) {
+				c = tableModelJanelaPrincipalJuros.getCheque(i);
+			}else{
+				c = tableModelJanelaPrincipal.getCheque(i);
+			}
+			
+			//Cheque c = tableModelJanelaPrincipal.getCheque(i);
 
+			try {
+				totalLucro = totalLucro + c.getLucro();
+				mediaJuros = mediaJuros + c.getJuros();
+				
+			} catch (Exception e) {
+				totalLucro = totalLucro + 0.0;
+				mediaJuros = mediaJuros + 0.0;
+			}
+			
 			total = total + c.getValor();
 		}
 		
 		tfTotalCheques.setText(String.valueOf(table.getRowCount()));
+		
+		tfMediaLucroTotal.setText(totalLucro.toString());
+		tfMediaJuros.setText(mediaJuros.toString());
 
 		return total;
 	}
@@ -3882,18 +4208,35 @@ public class JanelaMenuPrincipal extends JFrame {
 	private Double CalcularTotalChequesSelecionados(ArrayList<Cheque> listaSelecao) {
 
 		Double total = 0.0;
+		Double totalLucro = 0.0;
+		Double mediaJuros = 0.0;
 
 		for (int i = 0; i < listaSelecao.size(); i++) {
 
 			Cheque c = listaSelecao.get(i);
 			total = total + c.getValor();
+			
+			try {
+				totalLucro = totalLucro + c.getLucro();
+				mediaJuros = mediaJuros + c.getJuros();
+				
+			} catch (Exception e) {
+				totalLucro = totalLucro + 0.0;
+				mediaJuros = mediaJuros + 0.0;
+			}
 
 		}
+		
+		mediaJuros = mediaJuros / listaSelecao.size();
 
 		tfTotalCheques.setText(String.valueOf(listaSelecao.size()));
+		
+		tfMediaLucroTotal.setText(totalLucro.toString());
+		tfMediaJuros.setText(mediaJuros.toString());		
 
 		return total;
 	}
+			
 
 	private void botaoBuscar() {
 
@@ -4083,14 +4426,28 @@ public class JanelaMenuPrincipal extends JFrame {
 		for (int i = 0; i < table.getRowCount(); i++) {
 			boolean isChecked = false;
 			try {
-				isChecked = (boolean) table.getValueAt(i, 10);
+				if (chckbxMostrarLucro.isSelected()) {
+					isChecked = (boolean) table.getValueAt(i, 10);
+				}else{
+					isChecked = (boolean) table.getValueAt(i, 10);
+				}
+				
 			} catch (Exception e2) {
 				isChecked = false;
 			}
 
 			if (isChecked) {
 				int linhaReal = table.convertRowIndexToModel(i);
-				Cheque c = tableModelJanelaPrincipal.getCheque(linhaReal);
+				
+				Cheque c;
+				
+				if (chckbxMostrarLucro.isSelected()) {
+					c = tableModelJanelaPrincipalJuros.getCheque(linhaReal);
+				}else{
+					c = tableModelJanelaPrincipal.getCheque(linhaReal);
+				}
+				
+				//Cheque c = tableModelJanelaPrincipal.getCheque(linhaReal);
 				listaCheque.add(c);
 			}
 		}
@@ -4311,11 +4668,13 @@ public class JanelaMenuPrincipal extends JFrame {
 	private void listarLucro(){
 				
 		listChequeLucro.clear();
+		listBeneficiado.clear();
 		
 		int qtdCheques = 0;
 		Double totalCheques = 0.0;
 		Double totalPago = 0.0;
-		Double totalLucro = 0.0;
+		Double totalLucroTotal = 0.0;
+		Double totalLucroIndividual = 0.0;
 		Double mediaJuros = 0.0;
 		
 		String dti = formatSql.format(dcInicialLucro.getDate());
@@ -4324,48 +4683,70 @@ public class JanelaMenuPrincipal extends JFrame {
 		Destinatario dtl = (Destinatario) cbDestinatarioLucro.getSelectedItem();
 		
 		Query consultaLucro = manager
-				.createQuery("FROM Cheque WHERE vencimento BETWEEN '" + dti + "' AND '" + dtf + "' AND destinatario_origem_id = '" + dtl.getId() + "')");
+				.createQuery("FROM Cheque WHERE vencimento BETWEEN '" + dti + "' AND '" + dtf + "')");
 
 		List<Cheque> listaCheques = consultaLucro.getResultList();
 		
 		for (int j = 0; j < listaCheques.size(); j++) {
 			
-				listChequeLucro.add(listaCheques.get(j));
+			Query consultaBeneficio = manager
+					.createQuery("FROM Beneficiado WHERE cheque_id LIKE '" + listaCheques.get(j).getId() + "' AND destinatario_id LIKE '" + dtl.getId() + "')");
+
+			List<Beneficiado> listaBeneficiados = consultaBeneficio.getResultList();
+			
+			for (int i = 0; i < listaBeneficiados.size(); i++) {
+				
+				listBeneficiado.add(listaBeneficiados.get(i));
+				listChequeLucro.add(listaBeneficiados.get(i).getCheque());
 				
 				try {
-					totalCheques = totalCheques + listaCheques.get(j).getValor();
+					totalCheques = totalCheques + listaBeneficiados.get(i).getCheque().getValor();
 				} catch (Exception e) {
 					totalCheques = totalCheques + 0.0;
 				}
 				
 				try {
-					totalPago = totalPago + listaCheques.get(j).getValorPago();
+					totalPago = totalPago + listaBeneficiados.get(i).getCheque().getValorPago();
 				} catch (Exception e) {
 					totalPago = totalPago + 0.0;
 				}
 				
 				try {
-					totalLucro = totalLucro + listaCheques.get(j).getLucro();
+					totalLucroIndividual = totalLucroIndividual + listaBeneficiados.get(i).getLucro();
 				} catch (Exception e) {
-					totalLucro = totalLucro + 0.0;
+					totalLucroIndividual = totalLucroIndividual + 0.0;
 				}
 				
 				try {
-					mediaJuros = mediaJuros + listaCheques.get(j).getJuros();
+					mediaJuros = mediaJuros + listaBeneficiados.get(i).getJuros();
 				} catch (Exception e) {
 					mediaJuros = mediaJuros + 0.0;
-				}				
+				}	
+			}
 		}
 		
-		qtdCheques = listaCheques.size();
+		qtdCheques = listBeneficiado.size();
 		
 		mediaJuros = mediaJuros / qtdCheques;
 		
-		tfLucroLucro.setText(totalLucro.toString());
+		tfLucroLucro.setText(totalLucroIndividual.toString());
 		tfValorTotalChequesLucro.setText(totalCheques.toString());
 		tfValorPagoLucro.setText(totalPago.toString());
 		tfMediaJurosLucro.setText(mediaJuros.toString());
 		tfTotalChequesLucro.setText(String.valueOf(qtdCheques));
+		
+		totalLucroIndividual = totalCheques - totalPago;
+		
+		tfLucroTotalLucro.setText(totalLucroIndividual.toString());
+				
+	}
+	
+	private void ativaDadosLucro(boolean b){
+		
+		lblMdiaDeJuros_1.setVisible(b);
+		tfMediaJuros.setVisible(b);
+		lblELucroTotal.setVisible(b);
+		tfMediaLucroTotal.setVisible(b);
 		
 	}
 }

@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
+import br.com.grupocaravela.configuracao.Empresa;
 import br.com.grupocaravela.objeto.Cheque;
 import br.com.grupocaravela.util.ConectaBanco;
 import net.sf.jasperreports.engine.JRDataSource;
@@ -27,9 +28,7 @@ public class ChamaRelatorioChequesSelecionados {
 	String sistema = System.getProperty("os.name");
 	
 	ImageIcon gto = new ImageIcon(getClass().getResource("/br/com/grupocaravela/relatorios/logo_caravela.png"));
-	//map.put("LOGO", gto.getImage());
-
-	//método
+	
 	    public void report(String endereco, ArrayList<Cheque> listaCheque, String valorTotal) throws JRException {
     	
 	        JasperReport jasper;
@@ -43,22 +42,9 @@ public class ChamaRelatorioChequesSelecionados {
 	        
 	        map.put("VALOR_TOTAL", valorTotal);
 	        
-	        /*
-	        // criando os dados que serão passados ao datasource
-	        List dados = new ArrayList();	 
-	        
-	        for (int j = 0; j < listaCheque.size(); j++) {
-	        	
-	        	Cheque c = listaCheque.get(j);
-	        	
-	        	dados.add(j);
-	        }	        
-	        */
 	        JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(listaCheque);
 	       	        
 	        JasperPrint jasperPrint = JasperFillManager.fillReport(jasper, map, ds);
-	        	            
-	        //JasperPrint jasperPrint = JasperFillManager.fillReport(jasper, map, ds);
 
 	        JasperViewer jv = new JasperViewer(jasperPrint, false);
 	        jv.setVisible(true);
@@ -99,35 +85,65 @@ public class ChamaRelatorioChequesSelecionados {
 	        URL arquivo = getClass().getResource(endereco);
 	        jasper = (JasperReport) JRLoader.loadObject(arquivo);
 	        
-	        map.put("LOGO", gto.getImage());
+	        //map.put("LOGO", gto.getImage());
 	        
 	        map.put("VALOR_TOTAL", valorTotal);
-	        map.put("TOTAL_LUCRO", pagoTotal);
-	        map.put("TOTAL_PAGO", ganhoTotal);
+	        map.put("TOTAL_LUCRO", ganhoTotal);
+	        map.put("TOTAL_LUCRO_INDIVIDUAL", ganhoTotal);
+	        map.put("TOTAL_PAGO", pagoTotal);
 	        map.put("MEDIA_JUROS", mediaTotal);
 	        map.put("DESTINATARIO", destinatario);
 	        map.put("DATA_INICIAL", dtInicial);
 	        map.put("DATA_FINAL", dtFinal);
-	        
-	        /*
-	        // criando os dados que serão passados ao datasource
-	        List dados = new ArrayList();	 
-	        
-	        for (int j = 0; j < listaCheque.size(); j++) {
-	        	
-	        	Cheque c = listaCheque.get(j);
-	        	
-	        	dados.add(j);
-	        }	        
-	        */
+	     
 	        JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(listaCheque);
 	       	        
 	        JasperPrint jasperPrint = JasperFillManager.fillReport(jasper, map, ds);
 	        	            
-	        //JasperPrint jasperPrint = JasperFillManager.fillReport(jasper, map, ds);
+	        JasperViewer jv = new JasperViewer(jasperPrint, false);
+	        jv.setVisible(true);
+
+	    }
+	    
+	    public void reportLucroIndividual(String endereco, String valorTotal, String pagoTotal, String ganhoTotal, String ganhoTotalIndividual, String mediaTotal,
+	    		String destinatario, String idDestinatario, String dtInicial, String dtFinal, String dtInicialSql, String dtFinalSql) throws JRException {
+	    	
+	    	Connection conn = ConectaBanco.getConnection();
+
+	        JasperReport jasper; 
+
+	        Map map = new HashMap<>();	                
+
+	        URL arquivo = getClass().getResource(endereco);
+	        jasper = (JasperReport) JRLoader.loadObject(arquivo);
+
+	        //map.put("LOGO", gto.getImage());
+	        map.put("ID_BENEFICIARIO", idDestinatario);
+	        
+	        map.put("VALOR_TOTAL", valorTotal);
+	        map.put("TOTAL_LUCRO", ganhoTotal);
+	        map.put("TOTAL_LUCRO_INDIVIDUAL", ganhoTotalIndividual);
+	        map.put("TOTAL_PAGO", pagoTotal);
+	        map.put("MEDIA_JUROS", mediaTotal);
+	        map.put("DESTINATARIO", destinatario);
+	        map.put("DATA_INICIAL", dtInicial);
+	        map.put("DATA_FINAL", dtFinal);
+	        map.put("DATA_INICIAL_SQL", dtInicialSql);
+	        map.put("DATA_FINAL_SQL", dtFinalSql);
+	        
+	        JasperPrint jasperPrint = JasperFillManager.fillReport(jasper, map, conn);
 
 	        JasperViewer jv = new JasperViewer(jasperPrint, false);
 	        jv.setVisible(true);
+	    	
+	        
+	     
+	        //JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(listaCheque);
+	       	        
+	        //JasperPrint jasperPrint = JasperFillManager.fillReport(jasper, map, ds);
+	        	            
+	        //JasperViewer jv = new JasperViewer(jasperPrint, false);
+	        //jv.setVisible(true);
 
 	    }
 }

@@ -18,7 +18,7 @@ import javax.swing.table.TableCellRenderer;
 import br.com.grupocaravela.objeto.Cheque;
 import br.com.grupocaravela.render.TableRenderer;
 
-public class TableModelJanelaPrincipal extends AbstractTableModel {
+public class TableModelJanelaPrincipalJuros extends AbstractTableModel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -27,10 +27,10 @@ public class TableModelJanelaPrincipal extends AbstractTableModel {
 	private Cheque cheque;
 	// Titulo das colunas
 	private String[] colunas = { "Entrada", "Num. Cheque", "Conta", "Agência", "Banco", "Valor", "Vencimento",
-			"Proprietario", "Dest. atual", "Devolv.", "" };
+			"Proprietario", "Dest. atual", "juros", "" };
 
 	// Construtor
-	public TableModelJanelaPrincipal() {
+	public TableModelJanelaPrincipalJuros() {
 		this.listaCheque = new ArrayList<>();
 	}
 
@@ -153,17 +153,19 @@ public class TableModelJanelaPrincipal extends AbstractTableModel {
 
 		case 9:
 
-			if (this.listaCheque.get(rowIndex).getVoltouUmaVez() != null) {
-
-				if (this.listaCheque.get(rowIndex).getVoltouUmaVez()) {
-					return "Sim";
-				} else {
-					return "Não";
-				}
-			}else{
-				return "Não";
+			try {
+				return this.listaCheque.get(rowIndex).getJuros();
+			} catch (Exception e) {
+				return "ERRO!";
 			}
-			
+/*			
+		case 10:
+			try {
+				return this.listaCheque.get(rowIndex).getLucro();
+			} catch (Exception e) {
+				return "0";
+			}
+*/
 		case 10:
 			return this.listaCheque.get(rowIndex).getSelecionado();
 			//return false;

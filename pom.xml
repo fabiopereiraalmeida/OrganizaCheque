@@ -14,7 +14,7 @@
 	<!-- Parâmetros de execução -->
 	<build>
 		<!-- Nome do projeto empacotado -->
-		<finalName>Desbravar</finalName>
+		<finalName>Organiza Cheques</finalName>
 
 		<!-- Plugins -->
 		<plugins>

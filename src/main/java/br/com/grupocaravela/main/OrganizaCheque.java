@@ -1,5 +1,7 @@
 package br.com.grupocaravela.main;
 
+import java.awt.Color;
+
 import javax.swing.JOptionPane;
 
 import br.com.grupocaravela.aguarde.BootSplash;
@@ -36,8 +38,8 @@ public static void main(String[] args) {
 						//BootSplash bootSplash = new BootSplash();
 						EsperaJanela bootSplash = new EsperaJanela();
 						bootSplash.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-						//bootSplash.setUndecorated(true);
-						//bootSplash.setBackground(new Color(0, 0, 0, 0));
+						bootSplash.setUndecorated(true);
+						bootSplash.setBackground(new Color(0, 0, 0, 0));
 						bootSplash.setVisible(true);
 						bootSplash.setLocationRelativeTo(null);
 						try {
@@ -51,7 +53,5 @@ public static void main(String[] args) {
 					}
 				}).start();
 		}
-
-	
 }
 
